@@ -33,7 +33,6 @@ namespace SqlSample
             //config.ForEventStore().Use<SqlEventStore>().ForSnapshotStore().Use<SqlSnapshotStore>();
 
 
-
             var host = new Host(config);
             var bus = host.GetCommandBus();
 
