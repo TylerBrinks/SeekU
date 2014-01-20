@@ -13,6 +13,12 @@ namespace SeekU.Sql.Eventing
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
+        public string ConnectionStringName
+        {
+            get { return Database.SnapshotConnectionStringName; }
+            set { Database.SnapshotConnectionStringName = value; }
+        }
+
         public Snapshot<T> GetSnapshot<T>(Guid aggregateRootId)
         {
             var detail = Database.GetSnapshot(aggregateRootId);

@@ -1,5 +1,5 @@
-﻿using SeekU.Commanding;
-using SeekU.Domain;
+﻿using System;
+using SeekU.Commanding;
 using SeekU.Eventing;
 
 namespace SeekU
@@ -35,6 +35,11 @@ namespace SeekU
                 .ForSnapshotStore().Use<InMemorySnapshotStore>();
         }
 
+        /// <summary>
+        /// Register a type external to SeekU for DI purposes
+        /// </summary>
+        /// <typeparam name="TK">Instance to register for type T</typeparam>
+        /// <returns>Configuration</returns>
         public FluentHostConfiguration<T, TK> For<TK>() where TK : class
         {
             return new FluentHostConfiguration<T, TK>(this, DependencyResolver);
@@ -80,8 +85,8 @@ namespace SeekU
     /// <summary>
     /// Fluent configuration helper class
     /// </summary>
-    /// <typeparam name="TIoC"></typeparam>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TIoC">Depencency resolver type</typeparam>
+    /// <typeparam name="T">Type to register</typeparam>
     public class FluentHostConfiguration<TIoC, T>
         where TIoC : IDependencyResolver, new()
         where T : class
@@ -95,20 +100,36 @@ namespace SeekU
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Register a specific instance with the dependency resolver.
+        /// </summary>
+        /// <param name="instance">Instance to register</param>
+        /// <returns>Configuration</returns>
         public HostConfiguration<TIoC> Use(T instance)
         {
             _dependencyResolver.Register(instance);
             return _configuration;
         }
+        
+        /// <summary>
+        /// Registers types with the dependency resolver
+        /// </summary>
+        /// <typeparam name="TConcrete">Type to resolve</typeparam>
+        /// <returns>Configuration</returns>
+        public HostConfiguration<TIoC> Use<TConcrete>() where TConcrete : T
+        {
+            return Use<TConcrete>(instance => { });
+        }
 
         /// <summary>
         /// Registers types with the dependency resolver
         /// </summary>
-        /// <typeparam name="TConcrete">Type of resolver</typeparam>
+        /// <typeparam name="TConcrete">Type to resolve</typeparam>
+        /// <param name="configurationAction">Configuration action to perform upon object creation</param>
         /// <returns>Configuration</returns>
-        public HostConfiguration<TIoC> Use<TConcrete>() where TConcrete : T
+        public HostConfiguration<TIoC> Use<TConcrete>(Action<TConcrete> configurationAction) where TConcrete : T
         {
-            _dependencyResolver.Register<T, TConcrete>();
+            _dependencyResolver.Register<T, TConcrete>(configurationAction);
             return _configuration;
         }
     }

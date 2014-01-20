@@ -7,7 +7,6 @@ namespace SeekU.Commanding
     /// <typeparam name="T">Type of command to handle</typeparam>
     public interface IHandleCommands<in T> where T : ICommand
     {
-        //void Handle(ICommandHandlingContext<T> handlingContext, IDependencyResolver dependencyResolver);
         void Handle(CommandContext commandContext, T command);
     }
 }

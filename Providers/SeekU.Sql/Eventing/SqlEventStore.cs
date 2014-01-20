@@ -14,6 +14,12 @@ namespace SeekU.Sql.Eventing
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
+        public string ConnectionStringName
+        {
+            get { return Database.EventConnectionStringName; }
+            set { Database.EventConnectionStringName = value; }
+        }
+
         public IEnumerable<DomainEvent> GetEvents(Guid aggregateRootId, long startVersion)
         {
             var events = new List<DomainEvent>();

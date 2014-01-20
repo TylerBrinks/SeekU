@@ -8,13 +8,16 @@ namespace SeekU.FileIO.Eventing
 {
     public class JsonFileSnapshotStore : FileSnapshotStore, ISnapshotStore
     {
-        private const string FileName = "snapshot.json";
-
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
+
+        public JsonFileSnapshotStore()
+        {
+            FileName = "snapshot.json";   
+        }
 
         public override SnapshotDetail GetSnapshotDetail(string filePath)
         {
@@ -38,5 +41,7 @@ namespace SeekU.FileIO.Eventing
         {
             SaveSnapshotInstance(snapshot, FileName);
         }
+
+        public string FileName { get; set; }
     }
 }

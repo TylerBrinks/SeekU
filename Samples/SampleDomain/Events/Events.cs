@@ -4,16 +4,16 @@ using System.Runtime.Serialization;
 
 namespace SampleDomain.Events
 {
-    [DataContract] // Only necessary for XML serialization with the text file example
+    [DataContract] // Necessary for json serialization
     public class BankAccountEvent : DomainEvent
     {
-        [DataMember] // Only necessary for XML serialization with the text file example
+        [DataMember] // Necessary for json serialization
         public Guid Id { get; set; }
-        [DataMember] // Only necessary for XML serialization with the text file example
+        [DataMember] // Necessary for json serialization
         public double Amount { get; set; }
     }
 
-    [DataContract] // Only necessary for XML serialization with the text file example
+    [DataContract]
     public class AccountCreatedEvent : BankAccountEvent
     {
         public AccountCreatedEvent(Guid id, double amount)
@@ -23,7 +23,7 @@ namespace SampleDomain.Events
         }
     }
 
-    [DataContract] // Only necessary for XML serialization with the text file example
+    [DataContract]
     public class AccountDebitedEvent : BankAccountEvent
     {
         public AccountDebitedEvent(Guid id, double amount)
@@ -33,7 +33,7 @@ namespace SampleDomain.Events
         }
     }
 
-    [DataContract] // Only necessary for XML serialization with the text file example
+    [DataContract]
     public class AccountCreditedEvent : BankAccountEvent
     {
         public AccountCreditedEvent(Guid id, double amount)

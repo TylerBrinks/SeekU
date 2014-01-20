@@ -18,10 +18,10 @@ namespace InMemorySample
             // Using StructureMap for IoC.  You can use Ninject, AutoFac, Windsor, or whatever
             // supports the methods you need to override in HostConfiguration<T>
             var config = new HostConfiguration<StructureMapResolver>();
-           
+
             // Normally you'd configure providers here.  This "in memory" sample
             // uses the default providers, so no configuration is necessary.
-           
+
             var host = new Host(config);
             var bus = host.GetCommandBus();
 
@@ -83,11 +83,18 @@ namespace InMemorySample
             return _container.GetInstance(type);
         }
 
-        public void Register<T, K>()
+        public void Register<T, TK>()
             where T : class
-            where K : T
+            where TK : T
         {
-            _container.Configure(x => x.For<T>().Use<K>());
+            _container.Configure(x => x.For<T>().Use<TK>());
+        }
+
+        public void Register<T, TK>(Action<TK> configurationAction)
+            where T : class
+            where TK : T
+        {
+            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
         }
 
         public void Register<T>(T instance)

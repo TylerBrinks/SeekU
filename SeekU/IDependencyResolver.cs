@@ -14,6 +14,7 @@ namespace SeekU
         object Resolve(Type type);
 
         void Register<TInterface, TConcrete>() where TInterface : class where TConcrete : TInterface;
+        void Register<TInterface, TConcrete>(Action<TConcrete> configurationAction) where TInterface : class where TConcrete : TInterface;
         void Register<T>(T instance);
     }
 }

@@ -10,8 +10,5 @@ namespace SeekU.Eventing
     {
         IEnumerable<DomainEvent> GetEvents(Guid aggregateRootId, long startVersion);
         void Insert(Guid aggregateRootId, IEnumerable<DomainEvent> domainEvents);
-        //IEnumerable<DomainEvent> GetEventsByEventTypes(IEnumerable<Type> domainEventTypes);
-        //IEnumerable<DomainEvent> GetEventsByEventTypes(IEnumerable<Type> domainEventTypes, Guid aggregateRootId);
-        //IEnumerable<DomainEvent> GetEventsByEventTypes(IEnumerable<Type> domainEventTypes, DateTime startDate, DateTime endDate);
     }
 }

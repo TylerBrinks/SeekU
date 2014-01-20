@@ -22,7 +22,11 @@ namespace TextFileSample
 
             // Configure file-based event storeage
             config.ForEventStore().Use<JsonFileEventStore>()
-                .ForSnapshotStore().Use<JsonFileSnapshotStore>();
+                // Example of using a configuration action.  In this cas it sets the snapshot store's file name
+                .ForSnapshotStore().Use<JsonFileSnapshotStore>(store =>
+                {
+                    store.FileName = "snapshot-instance.json";
+                });
             
 
             var host = new Host(config);
@@ -86,11 +90,18 @@ namespace TextFileSample
             return _container.GetInstance(type);
         }
 
-        public void Register<T, K>()
+        public void Register<T, TK>()
             where T : class
-            where K : T
+            where TK : T
         {
-            _container.Configure(x => x.For<T>().Use<K>());
+            _container.Configure(x => x.For<T>().Use<TK>());
+        }
+
+        public void Register<T, TK>(Action<TK> configurationAction)
+            where T : class
+            where TK : T
+        {
+            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
         }
 
         public void Register<T>(T instance)

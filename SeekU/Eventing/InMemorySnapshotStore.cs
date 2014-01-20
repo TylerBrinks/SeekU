@@ -9,18 +9,18 @@ namespace SeekU.Eventing
     /// </summary>
     public class InMemorySnapshotStore : ISnapshotStore
     {
-        private readonly static Dictionary<Guid, object> _snapshots = new Dictionary<Guid, object>();
+        private readonly static Dictionary<Guid, object> Snapshots = new Dictionary<Guid, object>();
  
         public Snapshot<T> GetSnapshot<T>(Guid aggregateRootId)
         {
-            return _snapshots.ContainsKey(aggregateRootId)
-                ? (Snapshot<T>)_snapshots[aggregateRootId]
+            return Snapshots.ContainsKey(aggregateRootId)
+                ? (Snapshot<T>)Snapshots[aggregateRootId]
                 : null;
         }
 
         public void SaveSnapshot<T>(Snapshot<T> snapshot) 
         {
-            _snapshots[snapshot.AggregateRootId] = snapshot;
+            Snapshots[snapshot.AggregateRootId] = snapshot;
         }
     }
 }

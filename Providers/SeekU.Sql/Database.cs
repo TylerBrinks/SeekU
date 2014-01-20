@@ -7,30 +7,40 @@ namespace SeekU.Sql
     internal class Database
     {
         #region Sql statements
-        private const string GetEventsForId = "select * from EventStream where AggregateRootId = @0 and SequenceStart >= @1";
-        private const string TopOneSnapshot = "select top 1 * from Snapshots where AggregateRootId = @0 order by Version desc";
+
+        private const string EventStreamTableName = "EventStream";
+        private const string SnapshotTableName = "Snapshots";
+        private const string GetEventsForId = "select * from " + EventStreamTableName + " where AggregateRootId = @0 and SequenceStart >= @1";
+        private const string TopOneSnapshot = "select top 1 * from  " + SnapshotTableName + " where AggregateRootId = @0 order by Version desc";
         private const string TableExists = "select count(*) from INFORMATION_SCHEMA.TABLES where TABLE_NAME = @0";
-        private const string CreateEventStreamTable = "create table EventStream ([Id] [bigint] IDENTITY(1,1) NOT NULL,[SequenceStart] [bigint] NOT NULL,[SequenceEnd] [bigint] NOT NULL,[AggregateRootId] [uniqueidentifier] NOT NULL,[DateCreated] [datetime] NOT NULL,[EventData] [varchar](max) NULL,PRIMARY KEY CLUSTERED ([Id] ASC)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
-        private const string CreateSnapshotsTable = "create table Snapshots ([Id] [bigint] IDENTITY(1,1) NOT NULL,[AggregateRootId] [uniqueidentifier] NOT NULL,[Version] [bigint] NOT NULL,[SnapshotData] [varchar](max) NULL,PRIMARY KEY CLUSTERED ([Id] ASC)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
+        private const string CreateEventStreamTable = "create table " + EventStreamTableName + " ([Id] [bigint] IDENTITY(1,1) NOT NULL,[SequenceStart] [bigint] NOT NULL,[SequenceEnd] [bigint] NOT NULL,[AggregateRootId] [uniqueidentifier] NOT NULL,[DateCreated] [datetime] NOT NULL,[EventData] [varchar](max) NULL,PRIMARY KEY CLUSTERED ([Id] ASC)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
+        private const string CreateSnapshotsTable = "create table  " + SnapshotTableName + " ([Id] [bigint] IDENTITY(1,1) NOT NULL,[AggregateRootId] [uniqueidentifier] NOT NULL,[Version] [bigint] NOT NULL,[SnapshotData] [varchar](max) NULL,PRIMARY KEY CLUSTERED ([Id] ASC)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
         #endregion
 
         // Default connection string name
-        private static readonly string ConnectionStringName = "SeekU";
+        private static string _eventConnectionStringName = "SeekU";
+        private static string _snapshotConnectionStringName = "SeekU";
+        private static readonly object Sync = new object();
+        private static bool _eventTableCreated;
+        private static bool _snapshotTableCreated;
 
-        static Database()
+        internal static string EventConnectionStringName
         {
-            if (ConfigurationManager.AppSettings["SeekU.SqlConnectionName"] != null)
-            {
-                ConnectionStringName = ConfigurationManager.AppSettings["SeekU.SqlConnectionName"];
-            }
+            get { return _eventConnectionStringName; }
+            set { _eventConnectionStringName = value; }
+        }
 
-            CreateTable("EventStream", CreateEventStreamTable);
-            CreateTable("Snapshots", CreateSnapshotsTable);
+        internal static string SnapshotConnectionStringName
+        {
+            get { return _snapshotConnectionStringName; }
+            set { _snapshotConnectionStringName = value; }
         }
 
         internal static List<EventStream> GetEventStream(Guid aggregateRootId, long startVersion)
         {
-            using (var db = new PetaPoco.Database(ConnectionStringName))
+            CreateTables();
+
+            using (var db = new PetaPoco.Database(_eventConnectionStringName))
             {
                 var events = db.Fetch<EventStream>(GetEventsForId, aggregateRootId, startVersion);
 
@@ -40,15 +50,19 @@ namespace SeekU.Sql
 
         internal static void InsertEvents(EventStream events)
         {
-            using (var db = new PetaPoco.Database(ConnectionStringName))
+            CreateTables();
+            
+            using (var db = new PetaPoco.Database(_eventConnectionStringName))
             {
-                db.Insert("EventStream", "Id", events);
+                db.Insert(EventStreamTableName, "Id", events);
             }
         }
 
         internal static SnapshotDetail GetSnapshot(Guid aggregateRootId)
         {
-            using (var db = new PetaPoco.Database(ConnectionStringName))
+            CreateTables();
+
+            using (var db = new PetaPoco.Database(_snapshotConnectionStringName))
             {
                 return db.SingleOrDefault<SnapshotDetail>(TopOneSnapshot, aggregateRootId);
             }
@@ -56,15 +70,35 @@ namespace SeekU.Sql
 
         internal static void InsertSnapshot(SnapshotDetail snapshot)
         {
-            using (var db = new PetaPoco.Database(ConnectionStringName))
+            CreateTables();
+
+            using (var db = new PetaPoco.Database(_snapshotConnectionStringName))
             {
-                db.Insert("Snapshots", "Id", snapshot);
+                db.Insert(SnapshotTableName, "Id", snapshot);
             }
         }
 
-        internal static void CreateTable(string tableName, string sql)
+        private static void CreateTables()
         {
-            using (var db = new PetaPoco.Database(ConnectionStringName))
+            lock (Sync)
+            {
+                if (!_eventTableCreated)
+                {
+                    _eventTableCreated = true;
+                    CreateTable(EventStreamTableName, CreateEventStreamTable, _eventConnectionStringName);
+                }
+
+                if (!_snapshotTableCreated)
+                {
+                    _snapshotTableCreated = true;
+                    CreateTable(SnapshotTableName, CreateSnapshotsTable, _snapshotConnectionStringName);
+                }
+            }
+        }
+
+        private static void CreateTable(string tableName, string sql, string connectionString)
+        {
+            using (var db = new PetaPoco.Database(connectionString))
             {
                 var count = db.ExecuteScalar<int>(TableExists, tableName);
 

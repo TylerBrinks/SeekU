@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using InMemorySample.EventHandlers;
@@ -27,8 +26,6 @@ namespace NSBCommands
                 scan.Assembly(Assembly.GetExecutingAssembly());
                 scan.AssemblyContainingType<BankAccount>();
                 scan.WithDefaultConventions();
-                //scan.ConnectImplementationsToTypesClosing(typeof(IHandleCommands<>));
-                //scan.ConnectImplementationsToTypesClosing(typeof(IHandleDomainEvents<>));
 
                 x.For<IHandleCommands<CreateNewAccountCommand>>().Use<AccountHandler>();
                 x.For<IHandleCommands<DebitAccountCommand>>().Use<AccountHandler>();
@@ -45,15 +42,7 @@ namespace NSBCommands
         //[DebuggerStepThrough]
         public T Resolve<T>()
         {
-            try
-            {
-                var instance = _container.GetInstance<T>();
-                return instance;
-            }
-            catch (Exception ex)
-            {
-                return default(T);
-            }
+            return _container.GetInstance<T>();
         }
 
         public IEnumerable<T> ResolveAll<T>()
@@ -78,6 +67,13 @@ namespace NSBCommands
             where TK : T
         {
             _container.Configure(x => x.For<T>().Use<TK>());
+        }
+
+        public void Register<T, TK>(Action<TK> configurationAction)
+            where T : class
+            where TK : T
+        {
+            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
         }
 
         public void Register<T>(T instance)

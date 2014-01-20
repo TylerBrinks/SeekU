@@ -20,10 +20,19 @@ namespace SqlSample
             // supports the methods you need to override in HostConfiguration<T>
             var config = new HostConfiguration<StructureMapResolver>();
 
-            // Configure the host to use SQL to store events and snapshots
+            // Configure the host to use SQL to store events and snapshots.  You don't have to use
+            // the configuration action - both providers will default to a connection string
+            // named "SeekU."  This simply shows how you can configure each provider at runtime.
             config
-                .ForEventStore().Use<SqlEventStore>()
-                .ForSnapshotStore().Use<SqlSnapshotStore>();
+                // Sample of using configuration actions to set connectionstrings
+                .ForEventStore().Use<SqlEventStore>(store =>{store.ConnectionStringName = "MyConnectionString";})
+                // This could be a different connection if necessary
+                .ForSnapshotStore().Use<SqlSnapshotStore>(store =>{store.ConnectionStringName = "MyConnectionString";});
+
+            // Using the dfault conenction string would look like this:
+            //config.ForEventStore().Use<SqlEventStore>().ForSnapshotStore().Use<SqlSnapshotStore>();
+
+
 
             var host = new Host(config);
             var bus = host.GetCommandBus();
@@ -91,6 +100,13 @@ namespace SqlSample
             where K : T
         {
             _container.Configure(x => x.For<T>().Use<K>());
+        }
+
+        public void Register<T, TK>(Action<TK> configurationAction)
+            where T : class
+            where TK : T
+        {
+            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
         }
 
         public void Register<T>(T instance)
