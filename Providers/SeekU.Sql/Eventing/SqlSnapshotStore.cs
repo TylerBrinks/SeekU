@@ -13,15 +13,17 @@ namespace SeekU.Sql.Eventing
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
+        public Func<ISqlDatabase> GetDatabase = () => new SqlDatabase(); 
+
         public string ConnectionStringName
         {
-            get { return Database.SnapshotConnectionStringName; }
-            set { Database.SnapshotConnectionStringName = value; }
+            get { return SqlDatabase.SnapshotConnectionStringName; }
+            set { SqlDatabase.SnapshotConnectionStringName = value; }
         }
 
         public Snapshot<T> GetSnapshot<T>(Guid aggregateRootId)
         {
-            var detail = Database.GetSnapshot(aggregateRootId);
+            var detail = GetDatabase().GetSnapshot(aggregateRootId);
 
             if (detail == null)
             {
@@ -45,7 +47,7 @@ namespace SeekU.Sql.Eventing
                 SnapshotData = JsonConvert.SerializeObject(snapshot.Data, SerializerSettings)
             };
 
-            Database.InsertSnapshot(snapshotData);
+            GetDatabase().InsertSnapshot(snapshotData);
         }
     }
 }

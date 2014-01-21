@@ -14,19 +14,21 @@ namespace SeekU.Sql.Eventing
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
+        public Func<ISqlDatabase> GetDatabase = () => new SqlDatabase(); 
+
         public string ConnectionStringName
         {
-            get { return Database.EventConnectionStringName; }
-            set { Database.EventConnectionStringName = value; }
+            get { return SqlDatabase.EventConnectionStringName; }
+            set { SqlDatabase.EventConnectionStringName = value; }
         }
 
         public IEnumerable<DomainEvent> GetEvents(Guid aggregateRootId, long startVersion)
         {
             var events = new List<DomainEvent>();
 
-            var streams = Database.GetEventStream(aggregateRootId, startVersion);
+            var streams = GetDatabase().GetEventStream(aggregateRootId, startVersion);
 
-            foreach (var stream in streams)
+            foreach (var stream in streams.OrderBy(evt => evt.SequenceStart))
             {
                 var streamEvents = JsonConvert.DeserializeObject<IEnumerable<DomainEvent>>(stream.EventData, SerializerSettings);
                 events.AddRange(streamEvents);
@@ -51,7 +53,7 @@ namespace SeekU.Sql.Eventing
                 EventData = JsonConvert.SerializeObject((dynamic)events,  SerializerSettings)
             };
 
-            Database.InsertEvents(stream);
+            GetDatabase().InsertEvents(stream);
         }
     }
 }

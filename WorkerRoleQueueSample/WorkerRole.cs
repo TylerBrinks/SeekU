@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Runtime.Remoting;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Xml;
@@ -10,15 +11,19 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using SampleDomain.Events;
 using SeekU;
 using SeekU.Commanding;
+using SeekU.Eventing;
 
 namespace WorkerRoleQueueSample
 {
     public class WorkerRole : RoleEntryPoint
     {
-        private const string QueueName = "EventStream";
-        // QueueClient is thread-safe. 
+        // Change the queue name to change between command handing and event handling
+        private const string QueueName = "Commands";
+        //private const string QueueName = "EventStreams";
+
         private QueueClient _client;
         private readonly ManualResetEvent _completedEvent = new ManualResetEvent(false);
         private Host _host;
@@ -26,16 +31,19 @@ namespace WorkerRoleQueueSample
         public override void Run()
         {
             Trace.WriteLine("Starting processing of messages");
-        
-            // Initiates the message pump and callback is invoked for each message that is received, calling close on the client will stop the pump.
+ 
             _client.OnMessage(message =>
                 {
                     try
                     {
-                        // Process the message
                         Trace.WriteLine("Processing Service Bus message: " + message.SequenceNumber.ToString());
+                        _host.GetCommandBus().Send(GetCommandBody(message));
 
-                        _host.GetCommandBus().Send(GetBody(message));
+                        // To handle events, use the following:
+                        //_host.GetEventBus().PublishEvents(GetEventBody(message));
+
+                        message.Complete();
+
                     }
                     catch
                     {
@@ -46,7 +54,7 @@ namespace WorkerRoleQueueSample
             _completedEvent.WaitOne();
         }
 
-        public ICommand GetBody(BrokeredMessage brokeredMessage)
+        public ICommand GetCommandBody(BrokeredMessage brokeredMessage)
         {
             var contentType = brokeredMessage.ContentType;
             var bodyType = Type.GetType(contentType, true);
@@ -56,6 +64,18 @@ namespace WorkerRoleQueueSample
             var reader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max);
             var deserializedBody = serializer.ReadObject(reader);
             return (ICommand)deserializedBody;
+        }
+
+        public IEnumerable<DomainEvent> GetEventBody(BrokeredMessage brokeredMessage)
+        {
+            var contentType = brokeredMessage.ContentType;
+            var bodyType = Type.GetType(contentType, true);
+
+            var stream = brokeredMessage.GetBody<Stream>();
+            var serializer = new DataContractSerializer(bodyType, new[] { typeof(AccountCreatedEvent), typeof(AccountDebitedEvent), typeof(AccountCreditedEvent) });
+            var reader = XmlDictionaryReader.CreateBinaryReader(stream, XmlDictionaryReaderQuotas.Max);
+            var deserializedBody = serializer.ReadObject(reader);
+            return (IEnumerable<DomainEvent>)deserializedBody;
         }
 
         public override bool OnStart()

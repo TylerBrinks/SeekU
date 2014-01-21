@@ -2,7 +2,7 @@ using System;
 
 namespace SeekU.Sql
 {
-    internal class EventStream
+    public class EventStream
     {
         public long Id { get; set; }
         public long SequenceStart { get; set; }

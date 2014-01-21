@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
+using SampleDomain.Events;
 using SeekU.Commanding;
 using SeekU.Domain;
 using SeekU.Eventing;
@@ -15,33 +16,33 @@ namespace SeekU.Tests.CommandingTests
         [Test]
         public void Context_Finds_Root_Objects()
         {
-            var repo = new Mock<DomainRepository>();
             var resolver = new Mock<IDependencyResolver>();
+            var eventStore = new Mock<IEventStore>();
+            eventStore.Setup(es => es.GetEvents(It.IsAny<Guid>(), It.IsAny<long>())).Returns(
+                new List<DomainEvent>{new AccountCreatedEvent(Guid.NewGuid(), 100)});
 
-            repo.Setup(r => r.GetById<TestDomain>(It.IsAny<Guid>())).Returns(new TestDomain());
-            resolver.Setup(r => r.Resolve<DomainRepository>()).Returns(repo.Object);
+            resolver.Setup(r => r.Resolve<IEventStore>()).Returns(eventStore.Object);
+            resolver.Setup(r => r.Resolve<ISnapshotStore>()).Returns(new InMemorySnapshotStore());
+
             var context = new CommandContext(resolver.Object);
 
             var root = context.GetById<TestDomain>(SequentialGuid.NewId());
 
             Assert.IsNotNull(root);
-            repo.VerifyAll();
         }
 
         [Test]
         public void Context_Does_Not_Finds_Missing_Root_Objects()
         {
-            var repo = new Mock<DomainRepository>();
             var resolver = new Mock<IDependencyResolver>();
+            resolver.Setup(r => r.Resolve<ISnapshotStore>()).Returns(new InMemorySnapshotStore());
+            resolver.Setup(r => r.Resolve<IEventStore>()).Returns(new InMemoryEventStore());
 
-            repo.Setup(r => r.GetById<TestDomain>(It.IsAny<Guid>())).Returns((TestDomain)null);
-            resolver.Setup(r => r.Resolve<DomainRepository>()).Returns(repo.Object);
             var context = new CommandContext(resolver.Object);
 
             var root = context.GetById<TestDomain>(SequentialGuid.NewId());
 
             Assert.IsNull(root);
-            repo.VerifyAll();
         }
 
         [Test]

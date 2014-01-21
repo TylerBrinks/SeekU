@@ -15,7 +15,7 @@ namespace SampleWebsite.DependencyResolution
 
         public SeekUResolver()
         {
-            ObjectFactory.Initialize(x => x.Scan(scan =>
+            ObjectFactory.Configure(x => x.Scan(scan =>
             {
                 scan.TheCallingAssembly();
                 scan.AssemblyContainingType<BankAccount>();

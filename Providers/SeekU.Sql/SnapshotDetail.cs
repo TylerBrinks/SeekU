@@ -2,7 +2,7 @@
 
 namespace SeekU.Sql
 {
-    internal class SnapshotDetail
+    public class SnapshotDetail
     {
         public long Id { get; set; }
         public Guid AggregateRootId { get; set; }

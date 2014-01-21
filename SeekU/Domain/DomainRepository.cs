@@ -48,7 +48,9 @@ namespace SeekU.Domain
             // Replays all events to bring the root up to current version
             aggregateRoot.ReplayEvents(events);
 
-            return aggregateRoot;
+            return aggregateRoot.Version == 0 
+                ? null
+                : aggregateRoot;
         }
 
         /// <summary>
@@ -82,6 +84,11 @@ namespace SeekU.Domain
         /// <returns>Snapshot of Type T casted as an object</returns>
         private object GetSnapshot(AggregateRoot root, Guid aggregateRoodId)
         {
+            if (!(root is IAggregateRootWithSnapshot))
+            {
+                return null;
+            }
+
             var casted = (IAggregateRootWithSnapshot)root;
 
             var snapshotType = casted.GetGenericType();
