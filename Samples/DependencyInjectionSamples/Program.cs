@@ -16,18 +16,6 @@ namespace DependencyInjectionSamples
             Console.Read();
         }
 
-        static void UseStructureMap()
-        {
-            Console.WriteLine("Press a key to run with StructureMap");
-            Console.ReadKey();
-            // Configure using StructureMap
-            var structureMapConfig = new HostConfiguration<StructureMapResolver>();
-            structureMapConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("StructureMap", store));
-            structureMapConfig.For<IExample>().Use<Example>();
-
-            Run(structureMapConfig);
-        }
-
         static void UseNinject()
         {
             Console.WriteLine("\r\n================\r\n");
@@ -39,7 +27,19 @@ namespace DependencyInjectionSamples
             ninjectConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("Ninject", store));
             ninjectConfig.For<IExample>().Use<Example>();
 
-            Run(ninjectConfig);
+            IssueBankAccountCommands(ninjectConfig);
+        }
+        
+        static void UseStructureMap()
+        {
+            Console.WriteLine("Press a key to run with StructureMap");
+            Console.ReadKey();
+            // Configure using StructureMap
+            var structureMapConfig = new HostConfiguration<StructureMapResolver>();
+            structureMapConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("StructureMap", store));
+            structureMapConfig.For<IExample>().Use<Example>();
+
+            IssueBankAccountCommands(structureMapConfig);
         }
 
         static void UseWindsor()
@@ -53,7 +53,7 @@ namespace DependencyInjectionSamples
             ninjectConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("Windsor", store));
             ninjectConfig.For<IExample>().Use<Example>();
 
-            Run(ninjectConfig);
+            IssueBankAccountCommands(ninjectConfig);
         }
 
         static void ArbitraryConfigurationStep(string container, InMemorySnapshotStore store)
@@ -62,7 +62,7 @@ namespace DependencyInjectionSamples
                 store.GetType(), store.GetHashCode(), container);
         }
 
-        static void Run(HostConfiguration config)
+        static void IssueBankAccountCommands(HostConfiguration config)
         {
             var host = new Host(config);
 

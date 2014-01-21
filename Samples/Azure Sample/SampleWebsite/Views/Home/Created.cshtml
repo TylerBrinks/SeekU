@@ -1,0 +1,26 @@
+﻿@model SampleWebsite.Model.BankAccountReadModel
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="large-6 columns">
+            @using (Html.BeginForm("Debit", "Home"))
+            {
+                @Html.Hidden("Id", Model.Id)
+                <button type="submit" class="button alert">Debit account</button>
+            }
+        </div>
+        <div class="large-6 columns">
+            @using (Html.BeginForm("Credit", "Home"))
+            {
+                @Html.Hidden("Id", Model.Id)
+                <button type="submit" class="button">Credit account</button>
+            }
+
+        </div>
+    </div>
+}
+else
+{
+    <div>Action timed out</div>
+}
