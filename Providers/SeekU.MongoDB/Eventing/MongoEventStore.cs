@@ -10,15 +10,15 @@ namespace SeekU.MongoDB.Eventing
     /// </summary>
     public class MongoEventStore : IEventStore
     {
-        public Func<IMongoDataStore> GetDatabase = () => new MongoDataStore();
+        public Func<IMongoRepository> GetRepository = () => new MongoRepository();
 
         /// <summary>
         /// Globally sets the name of the event streams connection string for MongoDB 
         /// </summary>
         public string ConnectionStringName
         {
-            get { return MongoDataStore.EventConnectionStringName; }
-            set { MongoDataStore.EventConnectionStringName = value; }
+            get { return MongoRepository.EventConnectionStringName; }
+            set { MongoRepository.EventConnectionStringName = value; }
         }
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace SeekU.MongoDB.Eventing
         /// </summary>
         public string DatabaseName
         {
-            get { return MongoDataStore.EventDatabaseName; }
-            set { MongoDataStore.EventDatabaseName = value; }
+            get { return MongoRepository.EventDatabaseName; }
+            set { MongoRepository.EventDatabaseName = value; }
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace SeekU.MongoDB.Eventing
         public IEnumerable<DomainEvent> GetEvents(Guid aggregateRootId, long startVersion)
         {
             var events = new List<DomainEvent>();
-            var streams = GetDatabase().GetEventStream(aggregateRootId, startVersion);
+            var streams = GetRepository().GetEventStream(aggregateRootId, startVersion);
 
             var eventStream = streams.OrderBy(evt => evt.SequenceStart).Select(stream => stream.EventData);
 
@@ -72,7 +72,7 @@ namespace SeekU.MongoDB.Eventing
                 EventData = domainEvents
             };
 
-            GetDatabase().InsertEvents(stream);
+            GetRepository().InsertEvents(stream);
         }
     }
 }

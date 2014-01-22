@@ -6,7 +6,7 @@ namespace SeekU.Sql
     /// <summary>
     /// Represents event stream and snapshot persistance for MongoDB
     /// </summary>
-    public class SqlDataStore : ISqlDataStore
+    public class SqlRepository : ISqlRepository
     {
         #region Sql statements
 

@@ -92,6 +92,7 @@ namespace WorkerRoleQueueSample
             // Create the queue if it does not exist already
             var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
+
             if (!namespaceManager.QueueExists(QueueName))
             {
                 namespaceManager.CreateQueue(QueueName);

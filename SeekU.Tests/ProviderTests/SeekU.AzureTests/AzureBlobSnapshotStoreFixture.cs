@@ -2,23 +2,22 @@
 using Moq;
 using NUnit.Framework;
 using SampleDomain.Domain;
+using SeekU.Azure;
+using SeekU.Azure.Eventing;
 using SeekU.Domain;
-using SeekU.MongoDB;
-using SeekU.MongoDB.Eventing;
-using SeekU.Tests.Properties;
 
-namespace SeekU.Tests.ProviderTests.SeekU.MongoTests
+namespace SeekU.Tests.ProviderTests.SeekU.AzureTests
 {
     [TestFixture]
-    public class MongoSnapshotStoreFixture
+    public class AzureBlobSnapshotStoreFixture
     {
         [Test]
-        public void MongoSnapshotStore_Returns_Null_When_No_Snapshot_Exists()
+        public void AzureSnapshotStore_Returns_Null_When_No_Snapshot_Exists()
         {
-            var database = new Mock<IMongoRepository>();
+            var database = new Mock<IAzureStorageRepository>();
             database.Setup(db => db.GetSnapshot(It.IsAny<Guid>()));
 
-            var store = new MongoSnapshotStore
+            var store = new AzureBlobSnapshotStore
             {
                 GetRepository = () => database.Object
             };
@@ -29,12 +28,12 @@ namespace SeekU.Tests.ProviderTests.SeekU.MongoTests
         }
 
         [Test]
-        public void MongoSnapshotStore_Deserializes_Snapshot_Details()
+        public void AzureSnapshotStore_Deserializes_Snapshot_Details()
         {
-            var database = new Mock<IMongoRepository>();
+            var database = new Mock<IAzureStorageRepository>();
             database.Setup(db => db.GetSnapshot(It.IsAny<Guid>())).Returns(new SnapshotDetail{SnapshotData = new BankAccountSnapshot{Balance = 900}});
 
-            var store = new MongoSnapshotStore
+            var store = new AzureBlobSnapshotStore
             {
                 GetRepository = () => database.Object
             };
@@ -45,12 +44,12 @@ namespace SeekU.Tests.ProviderTests.SeekU.MongoTests
         }
 
         [Test]
-        public void MongoSnapshotStore_Serializes_Snapshots()
+        public void AzureSnapshotStore_Serializes_Snapshots()
         {
-            var database = new Mock<IMongoRepository>();
+            var database = new Mock<IAzureStorageRepository>();
             database.Setup(db => db.InsertSnapshot(It.IsAny<SnapshotDetail>()));
 
-            var store = new MongoSnapshotStore
+            var store = new AzureBlobSnapshotStore
             {
                 GetRepository = () => database.Object
             };

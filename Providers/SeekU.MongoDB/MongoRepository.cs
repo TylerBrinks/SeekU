@@ -11,7 +11,7 @@ namespace SeekU.MongoDB
     /// <summary>
     /// MongoDB event stream and snapshot storage implementation
     /// </summary>
-    public class MongoDataStore : IMongoDataStore
+    public class MongoRepository : IMongoRepository
     {
         #region Defaults
         private static string _eventConnectionStringName = "SeekU.MongoDB.ConnectionStringName";
@@ -52,7 +52,7 @@ namespace SeekU.MongoDB
         /// <returns>List of events</returns>
         public List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion)
         {
-            var collection = GetDatabase(_eventConnectionStringName).GetCollection<EventStream>("EventStream");
+            var collection = GetDatabase(_eventConnectionStringName, _eventDatabaseName).GetCollection<EventStream>("EventStream");
 
             var query = collection
                 .AsQueryable()
@@ -67,7 +67,7 @@ namespace SeekU.MongoDB
         /// <param name="events">Events to insert</param>
         public void InsertEvents(EventStream events)
         {
-            var collection = GetDatabase(_eventConnectionStringName).GetCollection<EventStream>("EventStream");
+            var collection = GetDatabase(_eventConnectionStringName, _eventDatabaseName).GetCollection<EventStream>("EventStream");
             collection.Insert(events);
         }
 
@@ -78,7 +78,7 @@ namespace SeekU.MongoDB
         /// <returns>Snapshot details</returns>
         public SnapshotDetail GetSnapshot(Guid aggregateRootId)
         {
-            var collection = GetDatabase(_snapshotConnectionStringName).GetCollection<SnapshotDetail>("Snapshots");
+            var collection = GetDatabase(_snapshotConnectionStringName, _snapshotDatabaseName).GetCollection<SnapshotDetail>("Snapshots");
 
             return collection.FindOne(Query<SnapshotDetail>.EQ(s => s.AggregateRootId, aggregateRootId));
         }
@@ -90,7 +90,7 @@ namespace SeekU.MongoDB
         public void InsertSnapshot(SnapshotDetail snapshot)
         {
             var existing = GetSnapshot(snapshot.AggregateRootId);
-            var collection = GetDatabase(_snapshotConnectionStringName).GetCollection<SnapshotDetail>("Snapshots");
+            var collection = GetDatabase(_snapshotConnectionStringName, _snapshotDatabaseName).GetCollection<SnapshotDetail>("Snapshots");
 
             if (existing != null)
             {
@@ -100,13 +100,13 @@ namespace SeekU.MongoDB
             collection.Save(snapshot);
         }
 
-        private static MongoDatabase GetDatabase(string connectionName)
+        private static MongoDatabase GetDatabase(string connectionName, string databaseName)
         {
             var connectoinString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
             var client = new MongoClient(connectoinString);
 
             var server = client.GetServer();
-            return server.GetDatabase("SeekU");
+            return server.GetDatabase(databaseName);
         }
     }
 }

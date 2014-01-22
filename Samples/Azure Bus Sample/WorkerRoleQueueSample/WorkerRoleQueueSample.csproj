@@ -38,6 +38,9 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
@@ -59,15 +62,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Providers\SeekU.StructureMap\SeekU.StructureMap.csproj">
+    <ProjectReference Include="..\..\..\Providers\SeekU.StructureMap\SeekU.StructureMap.csproj">
       <Project>{f4eacf40-2286-4d17-9b29-1cb8153dd9a7}</Project>
       <Name>SeekU.StructureMap</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Samples\SampleDomain\SampleDomain.csproj">
+    <ProjectReference Include="..\..\SampleDomain\SampleDomain.csproj">
       <Project>{59c62dd8-3d6b-4f24-9856-5ac9267a71cc}</Project>
       <Name>SampleDomain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SeekU\SeekU.csproj">
+    <ProjectReference Include="..\..\..\SeekU\SeekU.csproj">
       <Project>{49194e11-51f4-4792-af0d-32f1aa5513b4}</Project>
       <Name>SeekU</Name>
     </ProjectReference>

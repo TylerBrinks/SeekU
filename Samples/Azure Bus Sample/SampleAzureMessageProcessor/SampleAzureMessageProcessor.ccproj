@@ -37,7 +37,7 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\WorkerRoleQueueSample\WorkerRoleQueueSample.csproj">
+    <ProjectReference Include="..\WorkerRoleQueueSample\WorkerRoleQueueSample.csproj">
       <Name>WorkerRoleQueueSample</Name>
       <Project>{4545ba87-d39d-4b3e-a748-a13ba14a11fb}</Project>
       <Private>True</Private>

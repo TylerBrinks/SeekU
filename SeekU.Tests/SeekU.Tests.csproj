@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="ProviderTests\SeekU.AzureTests\AzureEventBusFixture.cs" />
     <Compile Include="ProviderTests\SeekU.AzureTests\AzureCommandBusFixture.cs" />
+    <Compile Include="ProviderTests\SeekU.AzureTests\AzureBlobSnapshotStoreFixture.cs" />
     <Compile Include="ProviderTests\SeekU.MongoTests\MongoEventStoreFixture.cs" />
     <Compile Include="ProviderTests\SeekU.MongoTests\MongoSnapshotStoreFixture.cs" />
     <Compile Include="ProviderTests\SeekU.SqlTests\SqlEventStoreFixture.cs" />

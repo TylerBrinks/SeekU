@@ -1,37 +1,39 @@
 ﻿using System;
-using Newtonsoft.Json;
 using SeekU.Domain;
 using SeekU.Eventing;
 
-namespace SeekU.Sql.Eventing
+namespace SeekU.Azure.Eventing
 {
     /// <summary>
-    /// SQL snapshot storage provider
+    /// Azure blob snapshot storage provider
     /// </summary>
-    public class SqlSnapshotStore : ISnapshotStore
+    public class AzureBlobSnapshotStore : ISnapshotStore
     {
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
-        };
-
-        public Func<ISqlRepository> GetRepository = () => new SqlRepository();
+        public Func<IAzureStorageRepository> GetRepository = () => new AzureStorageRepository();
 
         /// <summary>
-        /// Globally sets the name of the snapshot connection string for SQL 
+        /// Globally sets the name of the Azure snapshot connection string 
         /// </summary>
-        public string ConnectionStringName
+        public string ConnectionString
         {
-            get { return SqlRepository.SnapshotConnectionStringName; }
-            set { SqlRepository.SnapshotConnectionStringName = value; }
+            get { return AzureStorageRepository.SnapshotConnectionString; }
+            set { AzureStorageRepository.SnapshotConnectionString = value; }
+        }
+
+        /// <summary>
+        /// Globally sets the name of the Azure snapshot container name
+        /// </summary>
+        public string ContainerName
+        {
+            get { return AzureStorageRepository.SnapshotContainerName; }
+            set { AzureStorageRepository.SnapshotContainerName = value; }
         }
 
         /// <summary>
         /// Gets a snapsnot for a given ID if one exists
         /// </summary>
         /// <typeparam name="T">Type of snapshot detail</typeparam>
-        /// <param name="aggregateRootId">ID of the aggregate the snapshot was taken from</param>
+        /// <param name="aggregateRootId">Id of the aggregate the snapshot was taken from</param>
         /// <returns>Snapshot instance</returns>
         public Snapshot<T> GetSnapshot<T>(Guid aggregateRootId)
         {
@@ -46,7 +48,7 @@ namespace SeekU.Sql.Eventing
             {
                 AggregateRootId = detail.AggregateRootId,
                 Version = detail.Version,
-                Data = JsonConvert.DeserializeObject<T>(detail.SnapshotData, SerializerSettings)
+                Data = (T)detail.SnapshotData
             };
         }
 
@@ -61,7 +63,7 @@ namespace SeekU.Sql.Eventing
             {
                 AggregateRootId = snapshot.AggregateRootId,
                 Version = snapshot.Version,
-                SnapshotData = JsonConvert.SerializeObject(snapshot.Data, SerializerSettings)
+                SnapshotData = snapshot.Data
             };
 
             GetRepository().InsertSnapshot(snapshotDetail);

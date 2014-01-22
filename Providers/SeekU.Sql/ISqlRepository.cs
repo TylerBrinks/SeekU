@@ -6,7 +6,7 @@ namespace SeekU.Sql
     /// <summary>
     /// Represents event stream and snapshot persistance for SQL
     /// </summary>
-    public interface ISqlDataStore
+    public interface ISqlRepository
     {
         List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion);
         void InsertEvents(EventStream events);

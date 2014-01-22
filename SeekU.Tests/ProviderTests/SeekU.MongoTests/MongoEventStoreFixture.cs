@@ -40,12 +40,12 @@ namespace SeekU.Tests.ProviderTests.SeekU.MongoTests
                 }
             };
 
-            var database = new Mock<IMongoDataStore>();
+            var database = new Mock<IMongoRepository>();
             database.Setup(db => db.GetEventStream(It.IsAny<Guid>(), It.IsAny<long>())).Returns(events);
 
             var store = new MongoEventStore
             {
-                GetDatabase = () => database.Object
+                GetRepository = () => database.Object
             };
 
             var eventStream = store.GetEvents(id, 1).ToList();
@@ -60,12 +60,12 @@ namespace SeekU.Tests.ProviderTests.SeekU.MongoTests
         [Test]
         public void MongoEventStore_Serialized_Events()
         {
-            var database = new Mock<IMongoDataStore>();
+            var database = new Mock<IMongoRepository>();
             database.Setup(db => db.InsertEvents(It.IsAny<EventStream>()));
 
             var store = new MongoEventStore
             {
-                GetDatabase = () => database.Object
+                GetRepository = () => database.Object
             };
 
             var events = new List<DomainEvent>

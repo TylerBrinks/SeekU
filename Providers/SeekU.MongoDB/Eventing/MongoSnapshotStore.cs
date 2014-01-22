@@ -9,15 +9,15 @@ namespace SeekU.MongoDB.Eventing
     /// </summary>
     public class MongoSnapshotStore : ISnapshotStore
     {
-        public Func<IMongoDataStore> GetDatabase = () => new MongoDataStore();
+        public Func<IMongoRepository> GetRepository = () => new MongoRepository();
 
         /// <summary>
         /// Globally sets the name of the snapshot connection string for MongoDB 
         /// </summary>
         public string ConnectionStringName
         {
-            get { return MongoDataStore.SnapshotConnectionStringName; }
-            set { MongoDataStore.SnapshotConnectionStringName = value; }
+            get { return MongoRepository.SnapshotConnectionStringName; }
+            set { MongoRepository.SnapshotConnectionStringName = value; }
         }
 
         /// <summary>
@@ -25,8 +25,8 @@ namespace SeekU.MongoDB.Eventing
         /// </summary>
         public string DatabaseName
         {
-            get { return MongoDataStore.SnapshotDatabaseName; }
-            set { MongoDataStore.SnapshotDatabaseName = value; }
+            get { return MongoRepository.SnapshotDatabaseName; }
+            set { MongoRepository.SnapshotDatabaseName = value; }
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace SeekU.MongoDB.Eventing
         /// <returns>Snapshot instance</returns>
         public Snapshot<T> GetSnapshot<T>(Guid aggregateRootId)
         {
-            var detail = GetDatabase().GetSnapshot(aggregateRootId);
+            var detail = GetRepository().GetSnapshot(aggregateRootId);
 
             if (detail == null)
             {
@@ -66,7 +66,7 @@ namespace SeekU.MongoDB.Eventing
                 SnapshotData = snapshot.Data
             };
 
-            GetDatabase().InsertSnapshot(snapshotDetail);
+            GetRepository().InsertSnapshot(snapshotDetail);
         }
     }
 }

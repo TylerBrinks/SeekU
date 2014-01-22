@@ -10,7 +10,7 @@ namespace WorkerRoleQueueSample.EventHandlers
        IHandleDomainEvents<AccountCreditedEvent>
     {
         public void Handle(AccountCreatedEvent domainEvent)
-        {
+        { 
             // Here is where you'd update your Read database
             Trace.WriteLine("##############################################");
             Trace.WriteLine("Account was created via Azure " + domainEvent.Amount.ToString("C"));
