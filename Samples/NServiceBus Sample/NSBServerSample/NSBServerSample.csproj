@@ -58,6 +58,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Providers\SeekU.StructureMap\SeekU.StructureMap.csproj">
+      <Project>{f4eacf40-2286-4d17-9b29-1cb8153dd9a7}</Project>
+      <Name>SeekU.StructureMap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\SeekU\SeekU.csproj">
       <Project>{49194e11-51f4-4792-af0d-32f1aa5513b4}</Project>
       <Name>SeekU</Name>

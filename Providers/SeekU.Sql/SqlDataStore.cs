@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace SeekU.Sql
 {
-    public interface ISqlDatabase
-    {
-        List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion);
-        void InsertEvents(EventStream events);
-        SnapshotDetail GetSnapshot(Guid aggregateRootId);
-        void InsertSnapshot(SnapshotDetail snapshot);
-    }
-
-    public class SqlDatabase : ISqlDatabase
+    /// <summary>
+    /// Represents event stream and snapshot persistance for MongoDB
+    /// </summary>
+    public class SqlDataStore : ISqlDataStore
     {
         #region Sql statements
 
@@ -25,9 +19,10 @@ namespace SeekU.Sql
         private const string CreateSnapshotsTable = "create table  " + SnapshotTableName + " ([Id] [bigint] IDENTITY(1,1) NOT NULL,[AggregateRootId] [uniqueidentifier] NOT NULL,[Version] [bigint] NOT NULL,[SnapshotData] [varchar](max) NULL,PRIMARY KEY CLUSTERED ([Id] ASC)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]";
         #endregion
 
+        #region Defaults
         // Default connection string name
-        private static string _eventConnectionStringName = "SeekU.Sql.ConnectionString";
-        private static string _snapshotConnectionStringName = "SeekU.Sql.ConnectionString";
+        private static string _eventConnectionStringName = "SeekU.Sql.ConnectionStringName";
+        private static string _snapshotConnectionStringName = "SeekU.Sql.ConnectionStringName";
         private static readonly object Sync = new object();
         private static bool _eventTableCreated;
         private static bool _snapshotTableCreated;
@@ -43,7 +38,14 @@ namespace SeekU.Sql
             get { return _snapshotConnectionStringName; }
             set { _snapshotConnectionStringName = value; }
         }
+        #endregion
 
+        /// <summary>
+        /// Gets an event stream from SQL for a given ID
+        /// </summary>
+        /// <param name="aggregateRootId">Aggregate root ID</param>
+        /// <param name="startVersion">Starting version of the event stream</param>
+        /// <returns>List of events</returns>
         public List<EventStream> GetEventStream(Guid aggregateRootId, long startVersion)
         {
             CreateTables();
@@ -56,6 +58,10 @@ namespace SeekU.Sql
             }
         }
 
+        /// <summary>
+        /// Inserts a new event stream
+        /// </summary>
+        /// <param name="events">Events to insert</param>
         public void InsertEvents(EventStream events)
         {
             CreateTables();
@@ -66,6 +72,11 @@ namespace SeekU.Sql
             }
         }
 
+        /// <summary>
+        /// Gets a snapshot for a give ID if one exists
+        /// </summary>
+        /// <param name="aggregateRootId">Aggregate root ID</param>
+        /// <returns>Snapshot details</returns>
         public SnapshotDetail GetSnapshot(Guid aggregateRootId)
         {
             CreateTables();
@@ -76,6 +87,10 @@ namespace SeekU.Sql
             }
         }
 
+        /// <summary>
+        /// Inserts a new snapshot
+        /// </summary>
+        /// <param name="snapshot">Snapshot instance</param>
         public void InsertSnapshot(SnapshotDetail snapshot)
         {
             CreateTables();
@@ -86,6 +101,9 @@ namespace SeekU.Sql
             }
         }
 
+        /// <summary>
+        /// Creates the event stream and snapshot tables if they don't exist
+        /// </summary>
         private static void CreateTables()
         {
             lock (Sync)
@@ -104,6 +122,12 @@ namespace SeekU.Sql
             }
         }
 
+        /// <summary>
+        /// Creates tables if they don't already exist in the database
+        /// </summary>
+        /// <param name="tableName">Name of the table to create</param>
+        /// <param name="sql">SQL statement for table creation</param>
+        /// <param name="connectionString">SQL connection string</param>
         private static void CreateTable(string tableName, string sql, string connectionString)
         {
             using (var db = new PetaPoco.Database(connectionString))

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+using SampleDomain;
 using SampleDomain.Commands;
 using SampleDomain.Domain;
 using SeekU;
 using SeekU.Commanding;
 using SeekU.Eventing;
 using SeekU.Sql.Eventing;
+using SeekU.StructureMap;
 using StructureMap;
 
 namespace SqlSample
@@ -18,18 +17,18 @@ namespace SqlSample
         {
             // Using StructureMap for IoC.  You can use Ninject, AutoFac, Windsor, or whatever
             // supports the methods you need to override in HostConfiguration<T>
-            var config = new HostConfiguration<StructureMapResolver>();
+            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
 
             // Configure the host to use SQL to store events and snapshots.  You don't have to use
             // the configuration action - both providers will default to a connection string
             // named "SeekU."  This simply shows how you can configure each provider at runtime.
             config
                 // Sample of using configuration actions to set connectionstrings
-                .ForEventStore().Use<SqlEventStore>(store =>{store.ConnectionStringName = "MyConnectionString";})
+                .ForEventStore().Use<SqlEventStore>(store => { store.ConnectionStringName = "DemoConnectionString"; })
                 // This could be a different connection if necessary
-                .ForSnapshotStore().Use<SqlSnapshotStore>(store =>{store.ConnectionStringName = "MyConnectionString";});
+                .ForSnapshotStore().Use<SqlSnapshotStore>(store => { store.ConnectionStringName = "DemoConnectionString"; });
 
-            // Using the dfault conenction string would look like this:
+            // Using the default conenction string would look like this (less verbose):
             //config.ForEventStore().Use<SqlEventStore>().ForSnapshotStore().Use<SqlSnapshotStore>();
 
 
@@ -53,13 +52,11 @@ namespace SqlSample
         }
     }
 
-    public class StructureMapResolver : IDependencyResolver
+    public class SeekUDemoDependencyResolver : SeekUStructureMapResolver
     {
-        private readonly IContainer _container;
-
-        public StructureMapResolver()
+        public SeekUDemoDependencyResolver()
         {
-            ObjectFactory.Initialize(x => x.Scan(scan =>
+            Container.Configure(x => x.Scan(scan =>
             {
                 scan.TheCallingAssembly();
                 scan.AssemblyContainingType<BankAccount>();
@@ -68,54 +65,7 @@ namespace SqlSample
                 scan.ConnectImplementationsToTypesClosing(typeof(IHandleDomainEvents<>));
             }));
 
-            _container = ObjectFactory.Container;
-        }
-
-        [DebuggerStepThrough]
-        public T Resolve<T>()
-        {
-            return _container.GetInstance<T>();
-        }
-
-        public IEnumerable<T> ResolveAll<T>()
-        {
-            return _container.GetAllInstances<T>();
-        }
-
-        public IEnumerable<object> ResolveAll(Type type)
-        {
-            var instances = _container.GetAllInstances(type);
-
-            return instances.Cast<object>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return _container.GetInstance(type);
-        }
-
-        public void Register<T, K>()
-            where T : class
-            where K : T
-        {
-            _container.Configure(x => x.For<T>().Use<K>());
-        }
-
-        public void Register<T, TK>(Action<TK> configurationAction)
-            where T : class
-            where TK : T
-        {
-            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
-        }
-
-        public void Register<T>(T instance)
-        {
-            _container.Configure(x => x.For<T>().Use(instance));
-        }
-
-        public void Dispose()
-        {
-            _container.Dispose();
+            Container = ObjectFactory.Container;
         }
     }
 }

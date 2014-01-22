@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using SampleDomain.Domain;
-using SeekU;
 using SeekU.Commanding;
 using SeekU.Eventing;
-using StructureMap;
+using SeekU.StructureMap;
 
 namespace SampleWebsite.DependencyResolution
 {
-    public class SeekUResolver : IDependencyResolver
+    public class SeekUResolver : SeekUStructureMapResolver
     {
-        private readonly IContainer _container;
-
         public SeekUResolver()
         {
-            ObjectFactory.Configure(x => x.Scan(scan =>
+            Container.Configure(x => x.Scan(scan =>
             {
                 scan.TheCallingAssembly();
                 scan.AssemblyContainingType<BankAccount>();
@@ -23,54 +18,31 @@ namespace SampleWebsite.DependencyResolution
                 scan.ConnectImplementationsToTypesClosing(typeof(IHandleCommands<>));
                 scan.ConnectImplementationsToTypesClosing(typeof(IHandleDomainEvents<>));
             }));
-
-            _container = ObjectFactory.Container;
         }
 
-        public T Resolve<T>()
+        public override void Register<T, TK>()
         {
-            return _container.GetInstance<T>();
+            Container.Configure(x => x
+                .For<T>()
+                .HttpContextScoped()
+                .Use<TK>());
         }
 
-        public IEnumerable<T> ResolveAll<T>()
+        public override void Register<T, TK>(Action<TK> configurationAction)
         {
-            return _container.GetAllInstances<T>();
+            Container.Configure(x => x
+                .For<T>()
+                .HttpContextScoped()
+                .Use<TK>()
+                .OnCreation(configurationAction));
         }
 
-        public IEnumerable<object> ResolveAll(Type type)
+        public override void Register<T>(T instance)
         {
-            var instances = _container.GetAllInstances(type);
-
-            return instances.Cast<object>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return _container.GetInstance(type);
-        }
-
-        public void Register<T, TK>()
-            where T : class
-            where TK : T
-        {
-            _container.Configure(x => x.For<T>().HttpContextScoped().Use<TK>());
-        }
-
-        public void Register<T, TK>(Action<TK> configurationAction)
-            where T : class
-            where TK : T
-        {
-            _container.Configure(x => x.For<T>().HttpContextScoped().Use<TK>().OnCreation(configurationAction));
-        }
-
-        public void Register<T>(T instance)
-        {
-            _container.Configure(x => x.For<T>().HttpContextScoped().Use(instance));
-        }
-
-        public void Dispose()
-        {
-            _container.Dispose();
+            Container.Configure(x => x
+                .For<T>()
+                .HttpContextScoped()
+                .Use(instance));
         }
     }
 }

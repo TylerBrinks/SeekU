@@ -33,15 +33,14 @@ namespace SampleWebsite.DependencyResolution
                                         scan.TheCallingAssembly();
                                         scan.WithDefaultConventions();
                                     });
-                            //x.For<ICommandBus>().Use(host.GetCommandBus);
                         });
 
             var config = new HostConfiguration<SeekUResolver>();
             // Comment this out to publish events instead of commands
-            //config.ForCommandBus().Use<AzureCommandBus>();
+            config.ForCommandBus().Use<AzureCommandBus>();
 
             // Uncomment this to publish events instead of commands
-            config.ForEventBus().Use<AzureEventBus>();
+            //config.ForEventBus().Use<AzureEventBus>();
 
             return ObjectFactory.Container;
         }

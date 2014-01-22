@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using SampleDomain.Events;
 using SeekU.Eventing;
 
@@ -10,26 +9,19 @@ namespace SqlSample.EventHandlers
        IHandleDomainEvents<AccountDebitedEvent>,
        IHandleDomainEvents<AccountCreditedEvent>
     {
-        //private static readonly OrmLiteConnectionFactory ConnectionFactory;
-
         static BankAccountEventHandler()
         {
-            //try
-            //{
-            //    // Create the 
-            //    ConnectionFactory = new OrmLiteConnectionFactory(
-            //        ConfigurationManager.ConnectionStrings["SeekUEventStore"].ConnectionString,
-            //        SqlServerDialect.Provider);
+            using (var db = new PetaPoco.Database("DemoConnectionString"))
+            {
+                var count = db.ExecuteScalar<int>(@"select count(*) from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'BankAccountReadModel'");
 
-            //    using (var db = ConnectionFactory.OpenDbConnection())
-            //    {
-            //        db.CreateTableIfNotExists<BankAccountReadModel>();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("Unable to connect to SQL Server and create EventStream table.  Please check your 'SeekUEventStore' connection string and connection permissions.", ex);
-            //}
+                if (count > 0)
+                {
+                    return;
+                }
+
+                db.Execute("CREATE TABLE BankAccountReadModel ([Id] [uniqueidentifier] NOT NULL,[CurrentBalance] [float] NOT NULL,PRIMARY KEY CLUSTERED ([Id] ASC))");
+            }
         }
 
         public void Handle(AccountCreatedEvent domainEvent)
@@ -37,16 +29,16 @@ namespace SqlSample.EventHandlers
             // Update the Read database
             Console.WriteLine("Inserting a new account record with a starting balance of {0}", domainEvent.Amount);
 
-            //using (var db = ConnectionFactory.OpenDbConnection())
-            //{
-            //    var account = new BankAccountReadModel
-            //    {
-            //        Id = domainEvent.Id,
-            //        CurrentBalance = domainEvent.Amount
-            //    };
-                
-            //    db.Insert(account);
-            //}
+            using (var db = new PetaPoco.Database("DemoConnectionString"))
+            {
+                var account = new BankAccountReadModel
+                {
+                    Id = domainEvent.Id,
+                    CurrentBalance = domainEvent.Amount
+                };
+
+                db.Insert(account);
+            }
         }
 
         public void Handle(AccountDebitedEvent domainEvent)
@@ -54,13 +46,13 @@ namespace SqlSample.EventHandlers
             // Update the Read database
             Console.WriteLine("Updating account record -{0}", domainEvent.Amount.ToString("C"));
 
-            //using (var db = ConnectionFactory.OpenDbConnection())
-            //{
-            //    var account = db.Single<BankAccountReadModel>(new { domainEvent.Id});
-            //    account.CurrentBalance -= domainEvent.Amount;
+            using (var db = new PetaPoco.Database("DemoConnectionString"))
+            {
+                var account = db.Single<BankAccountReadModel>(domainEvent.Id);
+                account.CurrentBalance -= domainEvent.Amount;
 
-            //    db.Update(account);
-            //}
+                db.Update(account);
+            }
         }
 
         public void Handle(AccountCreditedEvent domainEvent)
@@ -68,13 +60,13 @@ namespace SqlSample.EventHandlers
             // Update the Read database
             Console.WriteLine("Updating account record {0}", domainEvent.Amount.ToString("C"));
 
-            //using (var db = ConnectionFactory.OpenDbConnection())
-            //{
-            //    var account = db.Single<BankAccountReadModel>(new { domainEvent.Id });
-            //    account.CurrentBalance += domainEvent.Amount;
+            using (var db = new PetaPoco.Database("DemoConnectionString"))
+            {
+                var account = db.Single<BankAccountReadModel>(domainEvent.Id);
+                account.CurrentBalance += domainEvent.Amount;
 
-            //    db.Update(account);
-            //}
+                db.Update(account);
+            }
         }
     }
 }

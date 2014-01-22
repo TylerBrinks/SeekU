@@ -36,7 +36,7 @@ namespace NSBServerSample
 
         static BankAccountHandler()
         {
-            var config = new HostConfiguration<StructureMapResolver>();
+            var config = new HostConfiguration<NsbStructureMapResolver>();
 
             // Use the default in memory providers, so no configuration is necessary.
 

@@ -29,7 +29,6 @@ namespace SeekU.Commanding
         public void Send<T>(T command) where T : ICommand
         {
             // Create an instance of the command handler for the command type
-            //var commandHandler = _dependencyResolver.Resolve<IHandleCommands<T>>();
             var commandType = typeof (IHandleCommands<>).MakeGenericType(command.GetType());
             var commandHandler = _dependencyResolver.Resolve(commandType);
 

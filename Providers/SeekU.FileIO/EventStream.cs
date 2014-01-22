@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using SeekU.Eventing;
 
-namespace SeekU.FileIO.Eventing
+namespace SeekU.FileIO
 {
     [DataContract]
     public class EventStream

@@ -46,11 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Eventing\EventStream.cs" />
-    <Compile Include="Eventing\FileEventStore.cs" />
-    <Compile Include="Eventing\FileSnapshotStore.cs" />
-    <Compile Include="Eventing\JsonFileEventStore.cs" />
-    <Compile Include="Eventing\JsonFileSnapshotStore.cs" />
+    <Compile Include="EventStream.cs" />
+    <Compile Include="Eventing\FileEventStoreBase.cs" />
+    <Compile Include="Eventing\FileSnapshotStoreBase.cs" />
+    <Compile Include="Eventing\JsonFileEventStoreBase.cs" />
+    <Compile Include="Eventing\JsonFileSnapshotStoreBase.cs" />
     <Compile Include="FileUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnapshotDetail.cs" />

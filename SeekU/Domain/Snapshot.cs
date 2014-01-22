@@ -8,7 +8,7 @@ namespace SeekU.Domain
     /// insted of replaying the entire event stream.
     /// </summary>
     /// <typeparam name="T">Type of object containing snapshot data</typeparam>
-    public class Snapshot<T>
+    public class Snapshot<T> //where T : class
     {
         public Snapshot()
         {

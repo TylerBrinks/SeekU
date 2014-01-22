@@ -6,6 +6,9 @@ using SeekU.Eventing;
 
 namespace SeekU.Sql.Eventing
 {
+    /// <summary>
+    /// SQL event storage provider
+    /// </summary>
     public class SqlEventStore : IEventStore
     {
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
@@ -14,14 +17,23 @@ namespace SeekU.Sql.Eventing
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
-        public Func<ISqlDatabase> GetDatabase = () => new SqlDatabase(); 
+        public Func<ISqlDataStore> GetDatabase = () => new SqlDataStore();
 
+        /// <summary>
+        /// Globally sets the name of the event streams connection string for SQL 
+        /// </summary>
         public string ConnectionStringName
         {
-            get { return SqlDatabase.EventConnectionStringName; }
-            set { SqlDatabase.EventConnectionStringName = value; }
+            get { return SqlDataStore.EventConnectionStringName; }
+            set { SqlDataStore.EventConnectionStringName = value; }
         }
 
+        /// <summary>
+        /// Queries SQL for a stream of events for a given ID.
+        /// </summary>
+        /// <param name="aggregateRootId">ID of the aggregate root instance</param>
+        /// <param name="startVersion">Starting event version of the event sequence range.</param>
+        /// <returns>Ordered list of domain events</returns>
         public IEnumerable<DomainEvent> GetEvents(Guid aggregateRootId, long startVersion)
         {
             var events = new List<DomainEvent>();
@@ -37,6 +49,11 @@ namespace SeekU.Sql.Eventing
             return events;
         }
 
+        /// <summary>
+        /// Inserts a new list of events into SQL
+        /// </summary>
+        /// <param name="aggregateRootId">Aggregate root ID</param>
+        /// <param name="domainEvents">List of events to insert</param>
         public void Insert(Guid aggregateRootId, IEnumerable<DomainEvent> domainEvents)
         {
             var events = domainEvents.ToList();

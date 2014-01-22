@@ -19,7 +19,7 @@ namespace SeekU.Tests.ProviderTests.SeekU.SqlTests
         [Test]
         public void SqlSnapshotStore_Returns_Null_When_No_Snapshot_Exists()
         {
-            var database = new Mock<ISqlDatabase>();
+            var database = new Mock<ISqlDataStore>();
             database.Setup(db => db.GetSnapshot(It.IsAny<Guid>()));
 
             var store = new SqlSnapshotStore
@@ -35,7 +35,7 @@ namespace SeekU.Tests.ProviderTests.SeekU.SqlTests
         [Test]
         public void SqlSnapshotStore_Deserializes_Snapshot_Details()
         {
-            var database = new Mock<ISqlDatabase>();
+            var database = new Mock<ISqlDataStore>();
             database.Setup(db => db.GetSnapshot(It.IsAny<Guid>())).Returns(new SnapshotDetail{SnapshotData = Resources.JsonSerializedSnapshot});
 
             var store = new SqlSnapshotStore
@@ -51,7 +51,7 @@ namespace SeekU.Tests.ProviderTests.SeekU.SqlTests
         [Test]
         public void SqlSnapshotStore_Serializes_Snapshots()
         {
-            var database = new Mock<ISqlDatabase>();
+            var database = new Mock<ISqlDataStore>();
             database.Setup(db => db.InsertSnapshot(It.IsAny<SnapshotDetail>()));
 
             var store = new SqlSnapshotStore

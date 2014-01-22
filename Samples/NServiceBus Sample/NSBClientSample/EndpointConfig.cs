@@ -50,7 +50,7 @@ namespace NSBClientSample
         private void SendSeekU()
         {
             // Use a custom configuration with our own ICommandBus implementation
-            var config = new HostConfiguration<StructureMapResolver>();
+            var config = new HostConfiguration<NsbStructureMapResolver>();
             // Configure commands to be published via NServiceBus instead of the 
             // in-memory bus.
             config.ForCommandBus().Use<NServiceCommandBus>();

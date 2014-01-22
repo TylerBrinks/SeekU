@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,12 +50,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Providers\SeekU.StructureMap\SeekU.StructureMap.csproj">
+      <Project>{f4eacf40-2286-4d17-9b29-1cb8153dd9a7}</Project>
+      <Name>SeekU.StructureMap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SeekU\SeekU.csproj">
       <Project>{49194e11-51f4-4792-af0d-32f1aa5513b4}</Project>
       <Name>SeekU</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

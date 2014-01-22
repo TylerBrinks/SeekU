@@ -18,7 +18,6 @@ namespace DependencyInjectionSamples
 
         static void UseNinject()
         {
-            Console.WriteLine("\r\n================\r\n");
             Console.WriteLine("Press a key to run with Ninject");
             Console.ReadKey();
 
@@ -32,6 +31,7 @@ namespace DependencyInjectionSamples
         
         static void UseStructureMap()
         {
+            Console.WriteLine("\r\n================\r\n"); 
             Console.WriteLine("Press a key to run with StructureMap");
             Console.ReadKey();
             // Configure using StructureMap

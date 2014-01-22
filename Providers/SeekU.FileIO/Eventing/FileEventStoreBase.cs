@@ -6,11 +6,22 @@ using SeekU.Eventing;
 
 namespace SeekU.FileIO.Eventing
 {
-    public abstract class FileEventStore
+    /// <summary>
+    /// Base class for file-base event storage
+    /// </summary>
+    public abstract class FileEventStoreBase
     {
+
+
         public abstract EventStream GetEventStream(string text);
         public abstract string GetEventStreamText(EventStream stream);
 
+        /// <summary>
+        /// Gets all events stored on disk
+        /// </summary>
+        /// <param name="aggregateRootId">Aggregate rood ID to query</param>
+        /// <param name="startVersion">Starting event versio</param>
+        /// <returns>List of domain events</returns>
         public IEnumerable<DomainEvent> GetAllEvents(Guid aggregateRootId, long startVersion)
         {
             var aggregateRootDirectory = Path.Combine(FileUtility.GetEventDirectory(), aggregateRootId.ToString());
@@ -33,6 +44,12 @@ namespace SeekU.FileIO.Eventing
             return domainEvents;
         }
 
+        /// <summary>
+        /// Saves a new file to disk containing event stream data
+        /// </summary>
+        /// <param name="aggregateRootId">Aggregate root id</param>
+        /// <param name="domainEvents">List of events</param>
+        /// <param name="extension">File extension for the created file</param>
         public void InsertEvents(Guid aggregateRootId, IEnumerable<DomainEvent> domainEvents, string extension)
         {
             var events = domainEvents.ToList();

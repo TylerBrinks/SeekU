@@ -11,10 +11,14 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using SampleDomain;
+using SampleDomain.Domain;
 using SampleDomain.Events;
 using SeekU;
 using SeekU.Commanding;
 using SeekU.Eventing;
+using SeekU.StructureMap;
+using StructureMap;
 
 namespace WorkerRoleQueueSample
 {
@@ -43,7 +47,6 @@ namespace WorkerRoleQueueSample
                         //_host.GetEventBus().PublishEvents(GetEventBody(message));
 
                         message.Complete();
-
                     }
                     catch
                     {
@@ -80,7 +83,7 @@ namespace WorkerRoleQueueSample
 
         public override bool OnStart()
         {
-            var config = new HostConfiguration<SeekUResolver>();
+            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
             _host = new Host(config);
 
             // Set the maximum number of concurrent connections 
@@ -105,6 +108,23 @@ namespace WorkerRoleQueueSample
             _client.Close();
             _completedEvent.Set();
             base.OnStop();
+        }
+    }
+
+    public class SeekUDemoDependencyResolver : SeekUStructureMapResolver
+    {
+        public SeekUDemoDependencyResolver()
+        {
+            Container.Configure(x => x.Scan(scan =>
+            {
+                scan.TheCallingAssembly();
+                scan.AssemblyContainingType<BankAccount>();
+                scan.WithDefaultConventions();
+                scan.ConnectImplementationsToTypesClosing(typeof(IHandleCommands<>));
+                scan.ConnectImplementationsToTypesClosing(typeof(IHandleDomainEvents<>));
+            }));
+
+            Container = ObjectFactory.Container;
         }
     }
 }

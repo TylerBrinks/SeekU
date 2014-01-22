@@ -3,12 +3,31 @@ using SeekU.Domain;
 
 namespace SeekU.FileIO.Eventing
 {
-    public abstract class FileSnapshotStore
+    // <summary>
+    /// Base class for file-base snapshot storage
+    /// </summary>
+    public abstract class FileSnapshotStoreBase
     {
+        /// <summary>
+        /// Gets snapshot details from disk
+        /// </summary>
+        /// <param name="filePath">Path to the snapshot file</param>
+        /// <returns>Snapshot details</returns>
         public abstract SnapshotDetail GetSnapshotDetail(string filePath);
 
+        /// <summary>
+        /// Gets the text to save as the file's contents
+        /// </summary>
+        /// <param name="snapshotData">Snapshot details</param>
+        /// <returns>Text representation of the snapshot details</returns>
         public abstract string GetSnapshotText(SnapshotDetail snapshotData);
 
+        /// <summary>
+        /// Gets snapshot details from disk
+        /// </summary>
+        /// <typeparam name="T">Type of snapshot</typeparam>
+        /// <param name="filePath">Path to the snapshot file</param>
+        /// <returns>Snapshot instance</returns>
         public Snapshot<T> GetSnapshotInstance<T>(string filePath)
         {
             if (!File.Exists(filePath))
@@ -26,6 +45,12 @@ namespace SeekU.FileIO.Eventing
             };
         }
 
+        /// <summary>
+        /// Saves a snapshot to a given file
+        /// </summary>
+        /// <typeparam name="T">Type of snapshot</typeparam>
+        /// <param name="snapshot">Snapshot instance</param>
+        /// <param name="fileName">File name to create or overwrite</param>
         public void SaveSnapshotInstance<T>(Snapshot<T> snapshot, string fileName)
         {
             var aggregateRootDirectory = Path.Combine(FileUtility.GetSnapshotDirectory(),

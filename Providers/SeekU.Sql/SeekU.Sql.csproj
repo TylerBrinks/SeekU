@@ -50,7 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SqlDatabase.cs" />
+    <Compile Include="ISqlDataStore.cs" />
+    <Compile Include="SqlDataStore.cs" />
     <Compile Include="Eventing\SqlSnapshotStore.cs" />
     <Compile Include="Eventing\SqlEventStore.cs" />
     <Compile Include="EventStream.cs" />

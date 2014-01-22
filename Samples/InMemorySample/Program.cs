@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using SampleDomain;
 using SampleDomain.Commands;
 using SampleDomain.Domain;
 using SeekU;
 using SeekU.Commanding;
 using SeekU.Eventing;
+using SeekU.StructureMap;
 using StructureMap;
 
 namespace InMemorySample
@@ -17,7 +20,7 @@ namespace InMemorySample
         {
             // Using StructureMap for IoC.  You can use Ninject, AutoFac, Windsor, or whatever
             // supports the methods you need to override in HostConfiguration<T>
-            var config = new HostConfiguration<StructureMapResolver>();
+            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
 
             // Normally you'd configure providers here.  This "in memory" sample
             // uses the default providers, so no configuration is necessary.
@@ -42,13 +45,11 @@ namespace InMemorySample
         }
     }
 
-    public class StructureMapResolver : IDependencyResolver
+    public class SeekUDemoDependencyResolver : SeekUStructureMapResolver
     {
-        private readonly IContainer _container;
-
-        public StructureMapResolver()
+        public SeekUDemoDependencyResolver()
         {
-            ObjectFactory.Initialize(x => x.Scan(scan =>
+            Container.Configure(x => x.Scan(scan =>
             {
                 scan.TheCallingAssembly();
                 scan.AssemblyContainingType<BankAccount>();
@@ -57,54 +58,7 @@ namespace InMemorySample
                 scan.ConnectImplementationsToTypesClosing(typeof(IHandleDomainEvents<>));
             }));
 
-            _container = ObjectFactory.Container;
-        }
-
-        [DebuggerStepThrough]
-        public T Resolve<T>()
-        {
-            return _container.GetInstance<T>();
-        }
-
-        public IEnumerable<T> ResolveAll<T>()
-        {
-            return _container.GetAllInstances<T>();
-        }
-
-        public IEnumerable<object> ResolveAll(Type type)
-        {
-            var instances = _container.GetAllInstances(type);
-
-            return instances.Cast<object>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return _container.GetInstance(type);
-        }
-
-        public void Register<T, TK>()
-            where T : class
-            where TK : T
-        {
-            _container.Configure(x => x.For<T>().Use<TK>());
-        }
-
-        public void Register<T, TK>(Action<TK> configurationAction)
-            where T : class
-            where TK : T
-        {
-            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
-        }
-
-        public void Register<T>(T instance)
-        {
-            _container.Configure(x => x.For<T>().Use(instance));
-        }
-
-        public void Dispose()
-        {
-            _container.Dispose();
+            Container = ObjectFactory.Container;
         }
     }
 }

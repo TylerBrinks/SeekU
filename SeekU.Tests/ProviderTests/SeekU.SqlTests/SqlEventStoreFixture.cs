@@ -42,7 +42,7 @@ namespace SeekU.Tests.ProviderTests.SeekU.SqlTests
                 }
             };
 
-            var database = new Mock<ISqlDatabase>();
+            var database = new Mock<ISqlDataStore>();
             database.Setup(db => db.GetEventStream(It.IsAny<Guid>(), It.IsAny<long>())).Returns(events);
 
             var store = new SqlEventStore
@@ -62,7 +62,7 @@ namespace SeekU.Tests.ProviderTests.SeekU.SqlTests
         [Test]
         public void SqlEventStore_Serialized_Events()
         {
-            var database = new Mock<ISqlDatabase>();
+            var database = new Mock<ISqlDataStore>();
             database.Setup(db => db.InsertEvents(It.IsAny<EventStream>()));
 
             var store = new SqlEventStore
