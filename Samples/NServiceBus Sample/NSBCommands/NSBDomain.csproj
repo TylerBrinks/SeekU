@@ -35,19 +35,11 @@
     <Reference Include="NServiceBus">
       <HintPath>..\..\..\packages\NServiceBus.Interfaces.4.3.2\lib\net40\NServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="NServiceBus.Core">
-      <HintPath>..\..\..\packages\NServiceBus.4.3.2.1\lib\net40\NServiceBus.Core.dll</HintPath>
-    </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\..\packages\structuremap.2.6.4.1\lib\net40\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandHandlers\CommandHandlers.cs" />
