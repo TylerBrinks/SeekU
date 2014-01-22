@@ -37,6 +37,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\packages\mongocsharpdriver.1.8.3\lib\net35\MongoDB.Driver.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1312.1622\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -62,6 +68,8 @@
     </Compile>
     <Compile Include="ProviderTests\SeekU.AzureTests\AzureEventBusFixture.cs" />
     <Compile Include="ProviderTests\SeekU.AzureTests\AzureCommandBusFixture.cs" />
+    <Compile Include="ProviderTests\SeekU.MongoTests\MongoEventStoreFixture.cs" />
+    <Compile Include="ProviderTests\SeekU.MongoTests\MongoSnapshotStoreFixture.cs" />
     <Compile Include="ProviderTests\SeekU.SqlTests\SqlEventStoreFixture.cs" />
     <Compile Include="ProviderTests\SeekU.SqlTests\SqlSnapshotStoreFixture.cs" />
   </ItemGroup>
@@ -73,6 +81,10 @@
     <ProjectReference Include="..\Providers\SeekU.Azure\SeekU.Azure.csproj">
       <Project>{5ddcfda5-6b32-4157-a976-d7be48607529}</Project>
       <Name>SeekU.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Providers\SeekU.MongoDB\SeekU.MongoDB.csproj">
+      <Project>{af1c448b-d76d-458e-b7f1-f93834aae6cd}</Project>
+      <Name>SeekU.MongoDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Providers\SeekU.Sql\SeekU.Sql.csproj">
       <Project>{4332b0e8-6bb5-4dce-9fdd-35a50671f44a}</Project>
