@@ -16,19 +16,17 @@ namespace TextFileSample
         static void Main(string[] args)
         {
             // Using StructureMap for IoC.  You can use Ninject, AutoFac, Windsor, or whatever
-            // supports the methods you need to override in HostConfiguration<T>
-            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
+            // supports the methods you need to override in SeekUHostConfiguration<T>
+            var host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
 
             // Configure file-based event storeage
-            config.ForEventStore().Use<JsonFileEventStoreBase>()
+            host.ForEventStore().Use<JsonFileEventStoreBase>()
                 // Example of using a configuration action.  In this cas it sets the snapshot store's file name
                 .ForSnapshotStore().Use<JsonFileSnapshotStoreBase>(store =>
                 {
                     store.FileName = "snapshot-instance.json";
                 });
             
-
-            var host = new Host(config);
             var bus = host.GetCommandBus();
 
             // I'm not a proponent of Guids for primary keys.  This method returns

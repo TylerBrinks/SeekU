@@ -30,7 +30,8 @@ namespace WorkerRoleQueueSample
 
         private QueueClient _client;
         private readonly ManualResetEvent _completedEvent = new ManualResetEvent(false);
-        private Host _host;
+        //private Host _host;
+        private SeekUHostConfiguration<SeekUDemoDependencyResolver> _host;
 
         public override void Run()
         {
@@ -83,8 +84,7 @@ namespace WorkerRoleQueueSample
 
         public override bool OnStart()
         {
-            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
-            _host = new Host(config);
+            _host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
 
             // Set the maximum number of concurrent connections 
             ServicePointManager.DefaultConnectionLimit = 12;

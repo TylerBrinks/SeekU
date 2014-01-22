@@ -43,38 +43,45 @@ namespace NSBClientSample
             // instead of a custom ICommandBus implementation.  It's totally up to the
             // needs of your application.
 
-            Console.WriteLine("Message sent");
+            Console.WriteLine("All messages sent");
             Console.Read();
         }
 
         private void SendSeekU()
         {
             // Use a custom configuration with our own ICommandBus implementation
-            var config = new HostConfiguration<NsbStructureMapResolver>();
+            var host = new SeekUHostConfiguration<NsbStructureMapResolver>();
             // Configure commands to be published via NServiceBus instead of the 
             // in-memory bus.
-            config.ForCommandBus().Use<NServiceCommandBus>();
+            host.ForCommandBus().Use<NServiceCommandBus>();
             // The NServiceCommandBus requires IBus as a constructor parameter.
             // This tells the resolver what to use for that dependency.
-            config.For<IBus>().Use(Bus);
+            host.For<IBus>().Use(Bus);
 
-            var host = new Host(config);
             var seekUBus = host.GetCommandBus();
 
             var id = Guid.NewGuid();
 
+            Console.WriteLine("Sending create account command");
             seekUBus.Send(new CreateNewAccountCommand(id, 950));
+            Console.WriteLine("Sending debit account command");
             seekUBus.Send(new DebitAccountCommand(id, 50));
+            Console.WriteLine("Sending credit account command");
             seekUBus.Send(new CreditAccountCommand(id, 120));
+            Console.WriteLine("Sending debit account command");
             seekUBus.Send(new DebitAccountCommand(id, 350));
         }
 
         private void SendNSB()
         {
             var id = Guid.NewGuid();
+            Console.WriteLine("Sending create account command");
             Bus.Send(new CreateNewAccountCommand(id, 950));
+            Console.WriteLine("Sending debit account command");
             Bus.Send(new DebitAccountCommand(id, 50));
+            Console.WriteLine("Sending credit account command");
             Bus.Send(new CreditAccountCommand(id, 120));
+            Console.WriteLine("Sending debit account command");
             Bus.Send(new DebitAccountCommand(id, 350));
         }
 

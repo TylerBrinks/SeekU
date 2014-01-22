@@ -16,13 +16,13 @@ namespace SqlSample
         static void Main(string[] args)
         {
             // Using StructureMap for IoC.  You can use Ninject, AutoFac, Windsor, or whatever
-            // supports the methods you need to override in HostConfiguration<T>
-            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
+            // supports the methods you need to override in SeekUHostConfiguration<T>
+            var host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
 
             // Configure the host to use SQL to store events and snapshots.  You don't have to use
             // the configuration action - both providers will default to a connection string
             // named "SeekU."  This simply shows how you can configure each provider at runtime.
-            config
+            host
                 // Sample of using configuration actions to set connectionstrings
                 .ForEventStore().Use<SqlEventStore>(store => { store.ConnectionStringName = "DemoConnectionString"; })
                 // This could be a different connection if necessary
@@ -31,8 +31,6 @@ namespace SqlSample
             // Using the default conenction string would look like this (less verbose):
             //config.ForEventStore().Use<SqlEventStore>().ForSnapshotStore().Use<SqlSnapshotStore>();
 
-
-            var host = new Host(config);
             var bus = host.GetCommandBus();
 
             // I'm not a proponent of Guids for primary keys.  This method returns

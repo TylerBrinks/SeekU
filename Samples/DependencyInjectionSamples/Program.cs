@@ -22,7 +22,7 @@ namespace DependencyInjectionSamples
             Console.ReadKey();
 
             // Configure using Ninject
-            var ninjectConfig = new HostConfiguration<NinjectResolver>();
+            var ninjectConfig = new SeekUHostConfiguration<NinjectResolver>();
             ninjectConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("Ninject", store));
             ninjectConfig.For<IExample>().Use<Example>();
 
@@ -35,7 +35,7 @@ namespace DependencyInjectionSamples
             Console.WriteLine("Press a key to run with StructureMap");
             Console.ReadKey();
             // Configure using StructureMap
-            var structureMapConfig = new HostConfiguration<StructureMapResolver>();
+            var structureMapConfig = new SeekUHostConfiguration<StructureMapResolver>();
             structureMapConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("StructureMap", store));
             structureMapConfig.For<IExample>().Use<Example>();
 
@@ -49,7 +49,7 @@ namespace DependencyInjectionSamples
             Console.ReadKey();
 
             // Configure using Windsor
-            var ninjectConfig = new HostConfiguration<WindsorResolver>();
+            var ninjectConfig = new SeekUHostConfiguration<WindsorResolver>();
             ninjectConfig.ForSnapshotStore().Use<InMemorySnapshotStore>(store => ArbitraryConfigurationStep("Windsor", store));
             ninjectConfig.For<IExample>().Use<Example>();
 
@@ -62,9 +62,9 @@ namespace DependencyInjectionSamples
                 store.GetType(), store.GetHashCode(), container);
         }
 
-        static void IssueBankAccountCommands(HostConfiguration config)
+        static void IssueBankAccountCommands(SeekUHost host)
         {
-            var host = new Host(config);
+            //var host = new Host(config);
 
             var bus = host.GetCommandBus();
 

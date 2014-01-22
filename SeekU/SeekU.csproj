@@ -67,10 +67,11 @@
     <Compile Include="Eventing\InMemorySnapshotStore.cs" />
     <Compile Include="Eventing\ISnapshotStore.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Host.cs" />
+    <Compile Include="FluentHostConfiguration.cs" />
     <Compile Include="IDependencyResolver.cs" />
+    <Compile Include="SeekUHostConfiguration.cs" />
     <Compile Include="SequentialGuid.cs" />
-    <Compile Include="HostConfiguration.cs" />
+    <Compile Include="SeekUHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

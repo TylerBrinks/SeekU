@@ -32,15 +32,14 @@ namespace NSBServerSample
         IHandleMessages<CreditAccountCommand>
     {
 
-        private static  readonly Host Host;
+        private static readonly SeekUHostConfiguration<NsbStructureMapResolver> Host;
 
         static BankAccountHandler()
         {
-            var config = new HostConfiguration<NsbStructureMapResolver>();
-
             // Use the default in memory providers, so no configuration is necessary.
+            Host = new SeekUHostConfiguration<NsbStructureMapResolver>();
 
-            Host = new Host(config);
+            //Host = new Host(config);
         }
         public void Handle(CreateNewAccountCommand message)
         {

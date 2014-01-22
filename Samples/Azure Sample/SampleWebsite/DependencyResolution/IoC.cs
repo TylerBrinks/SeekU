@@ -35,12 +35,12 @@ namespace SampleWebsite.DependencyResolution
                                     });
                         });
 
-            var config = new HostConfiguration<SeekUResolver>();
+            var host = new SeekUHostConfiguration<SeekUResolver>();
             // Comment this out to publish events instead of commands
-            config.ForCommandBus().Use<AzureCommandBus>();
+            host.ForCommandBus().Use<AzureCommandBus>();
 
             // Uncomment this to publish events instead of commands
-            //config.ForEventBus().Use<AzureEventBus>();
+            //host.ForEventBus().Use<AzureEventBus>();
 
             return ObjectFactory.Container;
         }

@@ -15,11 +15,10 @@ namespace MongoDBSample
         static void Main(string[] args)
         {
             // Use MongoDB for event and snapshot storage
-            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
-            config.ForEventStore().Use<MongoEventStore>()
+            var host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
+            host.ForEventStore().Use<MongoEventStore>()
                 .ForSnapshotStore().Use<MongoSnapshotStore>();
 
-            var host = new Host(config);
             var bus = host.GetCommandBus();
 
             // I'm not a proponent of Guids for primary keys.  This method returns

@@ -19,14 +19,13 @@ namespace InMemorySample
         static void Main(string[] args)
         {
             // Using StructureMap for IoC.  You can use Ninject, AutoFac, Windsor, or whatever
-            // supports the methods you need to override in HostConfiguration<T>
-            var config = new HostConfiguration<SeekUDemoDependencyResolver>();
+            // supports the methods you need to override in SeekUHostConfiguration<T>
+            var config = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
 
             // Normally you'd configure providers here.  This "in memory" sample
             // uses the default providers, so no configuration is necessary.
 
-            var host = new Host(config);
-            var bus = host.GetCommandBus();
+            var bus = config.GetCommandBus();
 
             // I'm not a proponent of Guids for primary keys.  This method returns
             // a sequential Guid to make database sorting behave like integers.
