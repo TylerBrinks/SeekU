@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SeekU.Azure
 {
@@ -7,8 +8,8 @@ namespace SeekU.Azure
     /// </summary>
     public interface IAzureStorageRepository
     {
-        //List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion);
-        //void InsertEvents(EventStream events);
+        List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion);
+        void InsertEvents(EventStream events);
         SnapshotDetail GetSnapshot(Guid aggregateRootId);
         void InsertSnapshot(SnapshotDetail snapshot);
     }

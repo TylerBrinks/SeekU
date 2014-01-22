@@ -16,9 +16,17 @@ namespace AzureStorageSample
         {
             // Use MongoDB for event and snapshot storage
             var host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
-            host.ForSnapshotStore().Use<AzureBlobSnapshotStore>(store =>
+            //"DefaultEndpointsProtocol=https;AccountName=[Your account name];AccountKey[Your account key]"
+            const string connectionString = "DefaultEndpointsProtocol=https;AccountName=storagesandbox;AccountKey=PGUpbQzmvwICuGm+/91VOSibmJFUBSSAvyFL6jtDMqPhhCyhPfa4hKOx71SJjsNUMrumsUu2MfFxBVJtIivu/g==";
+
+            host
+                .ForEventStore().Use<AzureTableEventStore>(store =>
+                {
+                    store.ConnectionString = connectionString;                    
+                })
+                .ForSnapshotStore().Use<AzureBlobSnapshotStore>(store =>
             {
-                store.ConnectionString = "DefaultEndpointsProtocol=https;AccountName=[Your account name];AccountKey[Your account key]";
+                store.ConnectionString = connectionString;
             });
 
             var bus = host.GetCommandBus();
@@ -30,11 +38,18 @@ namespace AzureStorageSample
 
             // Create the account
             bus.Send(new CreateNewAccountCommand(id, 95));
+            Console.WriteLine("Azure event created");
 
             // Use the account to create a history of events including a snapshot
             bus.Send(new DebitAccountCommand(id, 5));
+            Console.WriteLine("Azure event created");
+
             bus.Send(new CreditAccountCommand(id, 12));
+            Console.WriteLine("Azure event created");
+            Console.WriteLine("Azure snapshot created");
+
             bus.Send(new DebitAccountCommand(id, 35));
+            Console.WriteLine("Azure event created");
 
             Console.Read();
         }

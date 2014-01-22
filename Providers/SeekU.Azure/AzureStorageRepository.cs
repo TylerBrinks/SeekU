@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 
 namespace SeekU.Azure
@@ -21,20 +25,20 @@ namespace SeekU.Azure
 
         #region Defaults
         private static readonly object Sync = new object();
-        //private static bool _eventContainerCreated;
+        private static bool _eventTableCreated;
         private static bool _snapshotContainerCreated;
         private static string _snapshotContainerName = "snapshots";
-        //private static string _eventContainerName = "eventstream";
+        private static string _eventTableName = "eventstream";
 
-        //internal static string EventConnectionString { get; set; }
+        internal static string EventConnectionString { get; set; }
 
         internal static string SnapshotConnectionString{ get; set; }
 
-        //internal static string EventContainerName
-        //{
-        //    get { return _eventContainerName; }
-        //    set { _eventContainerName = value; }
-        //}
+        internal static string EventTableName
+        {
+            get { return _eventTableName; }
+            set { _eventTableName = value; }
+        }
 
         internal static string SnapshotContainerName
         {
@@ -43,36 +47,40 @@ namespace SeekU.Azure
         }
         #endregion
 
-        ///// <summary>
-        ///// Gets an event stream from Azure for a given ID
-        ///// </summary>
-        ///// <param name="aggregateRoodId">Aggregate root ID</param>
-        ///// <param name="startVersion">Starting version of the event stream</param>
-        ///// <returns>List of events</returns>
-        //public List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion)
-        //{
-        //    CreateContainers();
+        /// <summary>
+        /// Gets an event stream from Azure for a given ID
+        /// </summary>
+        /// <param name="aggregateRoodId">Aggregate root ID</param>
+        /// <param name="startVersion">Starting version of the event stream</param>
+        /// <returns>List of events</returns>
+        public List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion)
+        {
+            CreateContainers();
 
-        //    var container = GetContainer(EventConnectionString, _eventContainerName);
+            // Get all rows with the partition key == aggregate root and row key >= start version
+            var query = new TableQuery<EventStream>()
+                .Where(TableQuery.CombineFilters(
+                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal,aggregateRoodId.ToString()),
+                    TableOperators.And,
+                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual,startVersion.ToString(CultureInfo.InvariantCulture))
+                    ));
 
-        //    var blob = container.GetBlockBlobReference(string.Format("{0}-{1}", aggregateRoodId, startVersion));
+            var results = GetTable().ExecuteQuery(query);
 
-        //    return null;
-        //}
+            return results.ToList();
+        }
 
-        ///// <summary>
-        ///// Inserts a new event stream
-        ///// </summary>
-        ///// <param name="events">Events to insert</param>
-        //public void InsertEvents(EventStream events)
-        //{
-        //    CreateContainers();
+        /// <summary>
+        /// Inserts a new event stream
+        /// </summary>
+        /// <param name="events">Events to insert</param>
+        public void InsertEvents(EventStream events)
+        {
+            CreateContainers();
 
-        //    //var collection = GetRepository(_eventConnectionStringName).GetCollection<EventStream>("EventStream");
-        //    //collection.Insert(events);
-
-            
-        //}
+            var table = GetTable();
+            table.Execute(TableOperation.Insert(events));
+        }
 
         /// <summary>
         /// Gets a snapshot for a give ID if one exists
@@ -83,8 +91,7 @@ namespace SeekU.Azure
         {
             CreateContainers();
 
-            var container = GetContainer(SnapshotContainerName, SnapshotConnectionString);
-            var blob = container.GetBlockBlobReference(aggregateRootId.ToString().ToLower());
+            var blob = GetContainer().GetBlockBlobReference(aggregateRootId.ToString().ToLower());
 
             if (!blob.Exists())
             {
@@ -104,8 +111,7 @@ namespace SeekU.Azure
         {
             CreateContainers();
 
-            var container = GetContainer(SnapshotContainerName, SnapshotConnectionString);
-            var blob = container.GetBlockBlobReference(snapshot.AggregateRootId.ToString().ToLower());
+            var blob = GetContainer().GetBlockBlobReference(snapshot.AggregateRootId.ToString().ToLower());
 
             var blobText = JsonConvert.SerializeObject(snapshot, SerializerSettings);
 
@@ -115,14 +121,23 @@ namespace SeekU.Azure
         /// <summary>
         /// Gets a reference to an Azure blob container
         /// </summary>
-        /// <param name="containerName">Name of the container</param>
-        /// <param name="connectionString">Azure blob connection string</param>
         /// <returns>Azure blob container</returns>
-        private static CloudBlobContainer GetContainer( string containerName, string connectionString)
+        private static CloudBlobContainer GetContainer()
         {
-            var account = CloudStorageAccount.Parse(connectionString);
+            var account = CloudStorageAccount.Parse(SnapshotConnectionString);
             var client = account.CreateCloudBlobClient();
-            return client.GetContainerReference(containerName);
+            return client.GetContainerReference(_snapshotContainerName);
+        }
+       
+        /// <summary>
+        /// Gets a reference to an Azure table
+        /// </summary>
+        /// <returns>Azure table</returns>
+        private static CloudTable GetTable()
+        {
+            var account = CloudStorageAccount.Parse(EventConnectionString);
+            var client = account.CreateCloudTableClient();
+            return client.GetTableReference(_eventTableName);
         }
 
         /// <summary>
@@ -132,28 +147,18 @@ namespace SeekU.Azure
         {
             lock (Sync)
             {
-                //if (!_eventContainerCreated)
-                //{
-                //    _eventContainerCreated = true;
-                //    CreateContainer(_eventContainerName, EventConnectionString);
-                //}
+                if (!_eventTableCreated)
+                {
+                    _eventTableCreated = true;
+                    GetTable().CreateIfNotExists();
+                }
 
                 if (!_snapshotContainerCreated)
                 {
                     _snapshotContainerCreated = true;
-                    CreateContainer(_snapshotContainerName, SnapshotConnectionString);
+                    GetContainer().CreateIfNotExists();
                 }
             }
-        }
-
-        /// <summary>
-        /// Create a container if it does not exist
-        /// </summary>
-        /// <param name="containerName">Name of the container</param>
-        /// <param name="connectionString">Azure blob connection string</param>
-        private static void CreateContainer(string containerName, string connectionString)
-        {
-            GetContainer(containerName, connectionString).CreateIfNotExists();
         }
     }
 }

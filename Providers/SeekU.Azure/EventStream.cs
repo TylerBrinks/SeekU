@@ -1,14 +1,23 @@
 using System;
+using System.Globalization;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace SeekU.Azure
 {
-    public class EventStream
+    public class EventStream : TableEntity
     {
-        public long Id { get; set; }
-        public long SequenceStart { get; set; }
+        public EventStream()
+        {
+            
+        }
+
+        public EventStream(Guid aggregateRootId, long sequenceStart)
+        {
+            PartitionKey = aggregateRootId.ToString();
+            RowKey = sequenceStart.ToString(CultureInfo.InvariantCulture);
+        }
+
         public long SequenceEnd { get; set; }
-        public Guid AggregateRootId { get; set; }
-        public DateTime DateCreated { get; set; }
         public string EventData { get; set; }
     }
 }
