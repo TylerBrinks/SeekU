@@ -6,7 +6,7 @@ namespace SeekU
     public static class SequentialGuid
     {
         /// <summary>
-        /// Creates a GUID suitable for use with a database.  Guids will sort in a similar
+        /// Creates a GUID suitable for use with a database.  COMB Guids will sort in a similar
         /// way integer indexes sort.
         /// 
         /// http://www.informit.com/articles/article.asp?p=25862

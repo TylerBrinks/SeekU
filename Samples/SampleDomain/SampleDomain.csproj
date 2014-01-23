@@ -46,6 +46,8 @@
     <Compile Include="Domain\BankAccount.cs" />
     <Compile Include="Domain\BankAccount.Events.cs" />
     <Compile Include="Domain\BankAccountSnapshot.cs" />
+    <Compile Include="Domain\DebitCard.cs" />
+    <Compile Include="Domain\Transaction.cs" />
     <Compile Include="Events\Events.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

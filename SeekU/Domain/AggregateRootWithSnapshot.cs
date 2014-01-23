@@ -38,15 +38,6 @@ namespace SeekU.Domain
         }
 
         /// <summary>
-        /// Creates a snapshot object of type T with the hydrated snapshot data
-        /// </summary>
-        /// <returns>Snapshot of type T cast as an object</returns>
-        object IAggregateRootWithSnapshot.CreateGenericSnapshot()
-        {
-            return new Snapshot<T>(Id, Version, CreateSnapshot());
-        } 
-
-        /// <summary>
         /// Override to create boolean logic for determining 
         /// when a snapshot should be created
         /// </summary>
@@ -55,6 +46,15 @@ namespace SeekU.Domain
         {
             return false;
         }
+
+        /// <summary>
+        /// Creates a snapshot object of type T with the hydrated snapshot data
+        /// </summary>
+        /// <returns>Snapshot of type T cast as an object</returns>
+        object IAggregateRootWithSnapshot.CreateGenericSnapshot()
+        {
+            return new Snapshot<T>(Id, Version, CreateSnapshot());
+        } 
 
         /// <summary>
         /// Gets the generic type T of the snapshot object

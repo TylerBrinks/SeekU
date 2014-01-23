@@ -27,8 +27,6 @@ namespace SeekU.Eventing
                 return;
             }
 
-            //var aggregateId = events.First().AggregateRootId;
-
             var queue = new List<DomainEvent>();
 
             if (Events.ContainsKey(aggregateRootId))

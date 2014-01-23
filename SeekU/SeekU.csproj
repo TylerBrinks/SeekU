@@ -52,8 +52,10 @@
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\AggregateRootWithSnapshot.cs" />
     <Compile Include="Domain\DomainRepository.cs" />
+    <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\IAggregateRootWithSnapshot.cs" />
     <Compile Include="Domain\Snapshot.cs" />
+    <Compile Include="Eventing\DomainEntityEvent.cs" />
     <Compile Include="Eventing\DomainEvent.cs" />
     <Compile Include="Eventing\IEventBus.cs" />
     <Compile Include="Eventing\IEventStore.cs" />

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace SeekU.Commanding
 {
@@ -38,7 +37,7 @@ namespace SeekU.Commanding
             }
 
             // Find the handler's "Handle" method
-            var method = /*typeof(IHandleCommands<>).MakeGenericType(typeof(T))*/commandType.GetMethod("Handle");
+            var method = /*typeof(IHandleCommands<>).MakeGenericType(typeof(T))*/ commandType.GetMethod("Handle");
             
             try
             {

@@ -49,4 +49,48 @@ namespace SampleDomain.Events
             Amount = amount;
         }
     }
+
+    [DataContract]
+    public class DebitCardAddedEvent : DomainEvent
+    {
+        public DebitCardAddedEvent(Guid accountId, Guid cardId, string cardNumber)
+        {
+            AccountId = accountId;
+            CardId = cardId;
+            CardNumber = cardNumber;
+        }
+
+        [DataMember]
+        public Guid AccountId { get; set; }
+        [DataMember]
+        public Guid CardId { get; set; }
+        [DataMember]
+        public string CardNumber { get; set; }
+    }
+    
+    [DataContract]
+    public class DebitCardSwipedEvent : BankAccountEvent
+    {
+        public DebitCardSwipedEvent(Guid cardId, double amount)
+        {
+            Id = cardId;
+            Amount = amount;
+        }
+    }
+
+    [DataContract]
+    public class DebitCardChargedEvent : DomainEntityEvent
+    {
+        public DebitCardChargedEvent(Guid entityId, string merchant, double amount)
+        {
+            EntityId = entityId;
+            Merchant = merchant;
+            Amount = amount;
+        }
+
+        [DataMember]
+        public double Amount { get; set; }
+        [DataMember]
+        public string Merchant { get; set; }
+    }
 }

@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="CommandingTests\CommandContextFixture.cs" />
     <Compile Include="DomainTests\AggregateRootFixture.cs" />
+    <Compile Include="DomainTests\EntityFixture.cs" />
     <Compile Include="EventingTests\InProcessEventBusFixture.cs" />
     <Compile Include="Fakes\TestDomain.cs" />
     <Compile Include="Fakes\SomethingHappened.cs" />

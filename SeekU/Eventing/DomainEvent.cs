@@ -11,6 +11,7 @@ namespace SeekU.Eventing
     {
         [DataMember]
         public long Sequence { get; set; }
+
         [DataMember]
         public DateTime EventDate { get; set; }
     }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
 using ReflectionMagic;
 using SeekU.Eventing;
 
@@ -10,7 +12,8 @@ namespace SeekU.Domain
     /// </summary>
     public abstract class AggregateRoot
     {
-        private readonly List<DomainEvent> _appliedEvents = new List<DomainEvent>(); 
+        private readonly List<DomainEvent> _appliedEvents = new List<DomainEvent>();
+        private readonly List<Entity> _entities = new List<Entity>(); 
 
         /// <summary>
         /// Creates a new aggregate root with a new ID
@@ -55,19 +58,17 @@ namespace SeekU.Domain
             if (isNew)
             {
                 domainEvent.Sequence = Version;
-                //domainEvent.AggregateRootId = Id;
                 domainEvent.EventDate = DateTime.UtcNow;
             }
 
             // Call the apply method on the domain model instance
-            try
+            if (!(domainEvent is DomainEntityEvent))
             {
-                this.AsDynamic().Apply(domainEvent);
+                ApplyEventToSelf(domainEvent);
             }
-            catch(ApplicationException ex)
+            else
             {
-                // The aggregate root has no internal handler for the event.  No 
-                // need to trow an error.
+                ApplyEventToEntities(domainEvent as DomainEntityEvent);
             }
 
             // Save the event for persistance if it's new
@@ -82,7 +83,7 @@ namespace SeekU.Domain
         /// state and version
         /// </summary>
         /// <param name="events">Stream of events to replay</param>
-        internal void ReplayEvents(IEnumerable<DomainEvent> events)
+        public void ReplayEvents(IEnumerable<DomainEvent> events)
         {
             if(events == null)
             {
@@ -92,6 +93,49 @@ namespace SeekU.Domain
             foreach (var domainEvent in events)
             {
                 ApplyEvent(domainEvent, false);
+            }
+        }
+
+        /// <summary>
+        /// Associates an entity with the aggregate root
+        /// </summary>
+        /// <param name="entity">Entity to associate</param>
+        internal void Associate(Entity entity)
+        {
+            if (!_entities.Contains(entity))
+            {
+                _entities.Add(entity);
+            }
+        }
+
+        /// <summary>
+        /// Applies a domain event to the current instance
+        /// </summary>
+        /// <param name="domainEvent">Event to apply</param>
+        private void ApplyEventToSelf(DomainEvent domainEvent)
+        {
+            try
+            {
+                this.AsDynamic().Apply(domainEvent);
+            }
+            catch (ApplicationException ex)
+            {
+                // The aggregate root has no internal handler for the event.  No 
+                // need to trow an error.
+            }
+        }
+
+        /// <summary>
+        /// Applies an entity event to the appropriate entity
+        /// </summary>
+        /// <param name="entityEvent">Entity event to apply</param>
+        private void ApplyEventToEntities(DomainEntityEvent entityEvent)
+        {
+            var entity = _entities.FirstOrDefault(e => e.Id == entityEvent.EntityId);
+
+            if (entity != null)
+            {
+                entity.AsDynamic().Apply(entityEvent);
             }
         }
     }
