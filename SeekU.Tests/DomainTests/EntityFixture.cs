@@ -28,7 +28,7 @@ namespace SeekU.Tests.DomainTests
 
             Assert.AreEqual(200, account.GetTotalCardTransactions());
             Assert.AreEqual(6, account.Version);
-            Assert.AreEqual(6, account.AppliedEvents.Count);
+            Assert.AreEqual(0, account.AppliedEvents.Count);
         }
 
         private static BankAccount SetupAccount()
