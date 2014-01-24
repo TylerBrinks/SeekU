@@ -36,8 +36,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B7736CF2-C9D2-4599-964C-F72F8AAF377F}"
 	ProjectSection(SolutionItems) = preProject
 		SeekU\.nuget\NuGet.Config = SeekU\.nuget\NuGet.Config
+		.nuget\NuGet.Config = .nuget\NuGet.Config
 		SeekU\.nuget\NuGet.exe = SeekU\.nuget\NuGet.exe
+		.nuget\NuGet.exe = .nuget\NuGet.exe
 		SeekU\.nuget\NuGet.targets = SeekU\.nuget\NuGet.targets
+		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeekU.FileIO", "Providers\SeekU.FileIO\SeekU.FileIO.csproj", "{FB95DDC6-7E5B-493A-BCD3-92811FB99BE2}"
@@ -68,6 +71,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureStorageSample", "Samples\AzureStorageSample\AzureStorageSample.csproj", "{F2459ADD-C5BF-4E77-97CB-EC4598EA7A94}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeekU.Ninject", "Providers\SeekU.Ninject\SeekU.Ninject.csproj", "{3207019B-FED6-46B0-BABC-1CA4E55E2BB1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{EF1C0310-6249-4BF6-8939-85B6BC419DEE}"
+	ProjectSection(SolutionItems) = preProject
+		nuspec\install.ps1 = nuspec\install.ps1
+		nuspec\SeekU.nuspec = nuspec\SeekU.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

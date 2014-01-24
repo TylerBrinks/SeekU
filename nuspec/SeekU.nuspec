@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata minClientVersion="">
+        <id>SeekU</id>
+        <version>$version$</version>
+        <title>SeekU</title>
+        <authors>Tyler Brinks</authors>
+        <owners>Tyler Brinks</owners>
+        <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
+        <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SeekU is a CQRS and Event Sourcing micro framework for simplifying CQRS and Event Sourcing in .NET.</description>
+        <summary>SeekU simplifies CQRS and Event Sourcing</summary>
+        <language>en-US</language>
+        <tags>SeekU, CQRS, Event Sourcing, Bus, Command Bus, Service Bus, Publish, Pub/Sub, NServiceBus, ESB, StructureMap, MongoDB</tags>
+        <dependencies>
+            <dependency id="ReflectionMagic" version="2.0.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\SeekU\bin\Release\SeekU.dll" target="lib\net40\SeekU.dll" />
+        <file src="..\SeekU\bin\Release\SeekU.dll" target="lib\net45\SeekU.dll" />
+        <file src="..\SeekU\bin\Release\SeekU.dll" target="lib\net451\SeekU.dll" />
+        <file src="install.ps1" target="tools\install.ps1" />
+    </files>
+</package>
