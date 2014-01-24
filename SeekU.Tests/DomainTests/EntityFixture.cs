@@ -20,10 +20,14 @@ namespace SeekU.Tests.DomainTests
         [Test]
         public void Entities_Are_Build_From_History_Replay()
         {
+            // Create an account and manipulate it to get a 
+            // history of events
             var events  = SetupAccount().AppliedEvents;
 
             var account = new BankAccount();
 
+            // Replaying those events on a new account should yield the
+            // same state.
             account.ReplayEvents(events);
 
             Assert.AreEqual(200, account.GetTotalCardTransactions());
