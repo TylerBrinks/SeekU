@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="">
+    <id>SeekU.MongoDB</id>
+    <version>$version$</version>
+    <title>SeekU.MongoDB</title>
+    <authors>Tyler Brinks</authors>
+    <owners>Tyler Brinks</owners>
+    <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
+    <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SeekU MongoDB provider for event stream and snapshot storage.</description>
+    <summary>SeekU MongoDB provider for event stream and snapshot storage.</summary>
+    <language>en-US</language>
+    <tags>SeekU, MongoDB, CQRS, Event Sourcing</tags>
+    <dependencies>
+      <dependency id="mongocsharpdriver" version="1.8.3" />
+      <dependency id="SeekU" version="0.0.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Providers\SeekU.MongoDB\bin\Release\SeekU.MongoDB.dll" target="lib\net40\SeekU.MongoDB.dll" />
+    <file src="..\Providers\SeekU.MongoDB\bin\Release\SeekU.MongoDB.dll" target="lib\net45\SeekU.MongoDB.dll" />
+    <file src="..\Providers\SeekU.MongoDB\bin\Release\SeekU.MongoDB.dll" target="lib\net451\SeekU.MongoDB.dll" />
+  </files>
+</package>

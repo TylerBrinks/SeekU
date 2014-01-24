@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="">
+    <id>SeekU.Azure</id>
+    <version>$version$</version>
+    <title>SeekU.Azure</title>
+    <authors>Tyler Brinks</authors>
+    <owners>Tyler Brinks</owners>
+    <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
+    <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SeekU Azure provider for command  bus, event bus, event stream storage, and snapshot storage.</description>
+    <summary>SeekU Azure provider for command transport and event storage.</summary>
+    <language>en-US</language>
+    <tags>SeekU, Azure, Blob, CQRS, Event Sourcing</tags>
+    <dependencies>
+      <dependency id="Microsoft.Data.Edm" version="5.6.0"/>
+      <dependency id="Microsoft.Data.OData" version="5.6.0" />
+      <dependency id="Microsoft.Data.Services.Client" version="5.6.0"  />
+      <dependency id="Microsoft.WindowsAzure.ConfigurationManager" version="2.0.3" />
+      <dependency id="Newtonsoft.Json" version="5.0.8"  />
+      <dependency id="System.Spatial" version="5.6.0" />
+      <dependency id="WindowsAzure.ServiceBus" version="2.2.3.0" />
+      <dependency id="WindowsAzure.Storage" version="3.0.2.0"  />
+      <dependency id="SeekU" version="0.0.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Providers\SeekU.Azure\bin\Release\SeekU.Azure.dll" target="lib\net40\SeekU.Azure.dll" />
+    <file src="..\Providers\SeekU.Azure\bin\Release\SeekU.Azure.dll" target="lib\net45\SeekU.Azure.dll" />
+    <file src="..\Providers\SeekU.Azure\bin\Release\SeekU.Azure.dll" target="lib\net451\SeekU.Azure.dll" />
+  </files>
+</package>

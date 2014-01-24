@@ -36,10 +36,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B7736CF2-C9D2-4599-964C-F72F8AAF377F}"
 	ProjectSection(SolutionItems) = preProject
 		SeekU\.nuget\NuGet.Config = SeekU\.nuget\NuGet.Config
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		SeekU\.nuget\NuGet.exe = SeekU\.nuget\NuGet.exe
 		.nuget\NuGet.exe = .nuget\NuGet.exe
-		SeekU\.nuget\NuGet.targets = SeekU\.nuget\NuGet.targets
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
@@ -75,7 +72,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuspec", "nuspec", "{EF1C0310-6249-4BF6-8939-85B6BC419DEE}"
 	ProjectSection(SolutionItems) = preProject
 		nuspec\install.ps1 = nuspec\install.ps1
+		nuspec\SeekU.Azure.nuspec = nuspec\SeekU.Azure.nuspec
+		nuspec\SeekU.FileIO.nuspec = nuspec\SeekU.FileIO.nuspec
+		nuspec\SeekU.MongoDB.nuspec = nuspec\SeekU.MongoDB.nuspec
+		nuspec\SeekU.Ninject.nuspec = nuspec\SeekU.Ninject.nuspec
 		nuspec\SeekU.nuspec = nuspec\SeekU.nuspec
+		nuspec\SeekU.Sql.nuspec = nuspec\SeekU.Sql.nuspec
+		nuspec\SeekU.StructureMap.nuspec = nuspec\SeekU.StructureMap.nuspec
 	EndProjectSection
 EndProject
 Global

@@ -60,4 +60,20 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="SeekUAssemblyInfo" />
+    </GetAssemblyIdentity>
+
+    <PropertyGroup>
+      <SeekUAssemblyVersion>%(SeekUAssemblyInfo.Version)</SeekUAssemblyVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <SeekUSemanticVersion>$(SeekUAssemblyVersion.SubString(0, $(SeekUAssemblyVersion.LastIndexOf('.'))))</SeekUSemanticVersion>
+    </PropertyGroup>
+
+    <Exec Command="$(SolutionDir).nuget\nuget pack $(SolutionDir)nuspec\SeekU.StructureMap.nuspec -Version $(SeekUSemanticVersion) -o $(SolutionDir)nuspec" />
+    <Message Text="$(SolutionDir).nuget\nuget pack $(SolutionDir)nuspec\SeekU.StructureMap.nuspec -Version $(SeekUSemanticVersion)" Importance="high" />
+  </Target>
 </Project>

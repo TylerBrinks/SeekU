@@ -21,8 +21,8 @@ namespace SeekU.Sql
 
         #region Defaults
         // Default connection string name
-        private static string _eventConnectionStringName = "SeekU.Sql.ConnectionStringName";
-        private static string _snapshotConnectionStringName = "SeekU.Sql.ConnectionStringName";
+        private static string _eventConnectionStringName = "SeekU.Sql";
+        private static string _snapshotConnectionStringName = "SeekU.Sql";
         private static readonly object Sync = new object();
         private static bool _eventTableCreated;
         private static bool _snapshotTableCreated;
@@ -48,7 +48,7 @@ namespace SeekU.Sql
         /// <returns>List of events</returns>
         public List<EventStream> GetEventStream(Guid aggregateRootId, long startVersion)
         {
-            CreateTables();
+            CreateEventTable();
 
             using (var db = new PetaPoco.Database(_eventConnectionStringName))
             {
@@ -64,7 +64,7 @@ namespace SeekU.Sql
         /// <param name="events">Events to insert</param>
         public void InsertEvents(EventStream events)
         {
-            CreateTables();
+            CreateEventTable();
             
             using (var db = new PetaPoco.Database(_eventConnectionStringName))
             {
@@ -79,7 +79,7 @@ namespace SeekU.Sql
         /// <returns>Snapshot details</returns>
         public SnapshotDetail GetSnapshot(Guid aggregateRootId)
         {
-            CreateTables();
+            CreateSnapshotTable();
 
             using (var db = new PetaPoco.Database(_snapshotConnectionStringName))
             {
@@ -93,7 +93,7 @@ namespace SeekU.Sql
         /// <param name="snapshot">Snapshot instance</param>
         public void InsertSnapshot(SnapshotDetail snapshot)
         {
-            CreateTables();
+            CreateSnapshotTable();
 
             using (var db = new PetaPoco.Database(_snapshotConnectionStringName))
             {
@@ -102,23 +102,36 @@ namespace SeekU.Sql
         }
 
         /// <summary>
-        /// Creates the event stream and snapshot tables if they don't exist
+        /// Creates the event stream table if it doesn't exist
         /// </summary>
-        private static void CreateTables()
+        private static void CreateEventTable()
         {
             lock (Sync)
             {
-                if (!_eventTableCreated)
+                if (_eventTableCreated)
                 {
-                    _eventTableCreated = true;
-                    CreateTable(EventStreamTableName, CreateEventStreamTable, _eventConnectionStringName);
+                    return;
                 }
 
-                if (!_snapshotTableCreated)
+                _eventTableCreated = true;
+                CreateTable(EventStreamTableName, CreateEventStreamTable, _eventConnectionStringName);
+            }
+        }
+
+        /// <summary>
+        /// Creates the snapshot table if it doesn't exist
+        /// </summary>
+        private static void CreateSnapshotTable()
+        {
+            lock (Sync)
+            {
+                if (_snapshotTableCreated)
                 {
-                    _snapshotTableCreated = true;
-                    CreateTable(SnapshotTableName, CreateSnapshotsTable, _snapshotConnectionStringName);
+                    return;
                 }
+
+                _snapshotTableCreated = true;
+                CreateTable(SnapshotTableName, CreateSnapshotsTable, _snapshotConnectionStringName);
             }
         }
 

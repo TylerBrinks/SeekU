@@ -14,7 +14,7 @@ namespace SeekU.Azure.Eventing
         /// <summary>
         /// Globally sets the name of the Azure snapshot connection string 
         /// </summary>
-        public string ConnectionString
+        public string BlobConnectionString
         {
             get { return AzureStorageRepository.SnapshotConnectionString; }
             set { AzureStorageRepository.SnapshotConnectionString = value; }
@@ -23,7 +23,7 @@ namespace SeekU.Azure.Eventing
         /// <summary>
         /// Globally sets the name of the Azure snapshot container name
         /// </summary>
-        public string ContainerName
+        public string BlobContainerName
         {
             get { return AzureStorageRepository.SnapshotContainerName; }
             set { AzureStorageRepository.SnapshotContainerName = value; }

@@ -14,8 +14,8 @@ namespace SeekU.MongoDB
     public class MongoRepository : IMongoRepository
     {
         #region Defaults
-        private static string _eventConnectionStringName = "SeekU.MongoDB.ConnectionStringName";
-        private static string _snapshotConnectionStringName = "SeekU.MongoDB.ConnectionStringName";
+        private static string _eventConnectionStringName = "SeekU.MongoDB";
+        private static string _snapshotConnectionStringName = "SeekU.MongoDB";
         private static string _snapshotDatabaseName = "SeekU";
         private static string _eventDatabaseName = "SeekU";
 

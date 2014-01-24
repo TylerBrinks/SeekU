@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata minClientVersion="">
+        <id>SeekU.StructureMap</id>
+        <version>$version$</version>
+        <title>SeekU.StructureMap</title>
+        <authors>Tyler Brinks</authors>
+        <owners>Tyler Brinks</owners>
+        <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
+        <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>SeekU depencency resolver built with StructureMap.</description>
+        <summary>StructureMap provider for SeekU.</summary>
+        <language>en-US</language>
+        <tags>SeekU, StructureMap, CQRS, Event Sourcing</tags>
+        <dependencies>
+          <dependency id="structuremap" version="2.6.4.1" />
+          <dependency id="SeekU" version="0.0.1" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\Providers\SeekU.StructureMap\bin\Release\SeekU.StructureMap.dll" target="lib\net40\SeekU.StructureMap.dll" />
+        <file src="..\Providers\SeekU.StructureMap\bin\Release\SeekU.StructureMap.dll" target="lib\net45\SeekU.StructureMap.dll" />
+        <file src="..\Providers\SeekU.StructureMap\bin\Release\SeekU.StructureMap.dll" target="lib\net451\SeekU.StructureMap.dll" />
+    </files>
+</package>

@@ -9,10 +9,10 @@
         <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
         <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>SeekU is a CQRS and Event Sourcing micro framework for simplifying CQRS and Event Sourcing in .NET.</description>
-        <summary>SeekU simplifies CQRS and Event Sourcing</summary>
+        <description>SeekU is a micro framework for simplifying CQRS and Event Sourcing in .NET.</description>
+        <summary>SeekU simplifies CQRS and Event Sourcing in .NET.</summary>
         <language>en-US</language>
-        <tags>SeekU, CQRS, Event Sourcing, Bus, Command Bus, Service Bus, Publish, Pub/Sub, NServiceBus, ESB, StructureMap, MongoDB</tags>
+        <tags>SeekU, CQRS, Event Sourcing, Command Query, Bus, Command Bus, Service Bus, Publish, Pub/Sub, NServiceBus, ESB</tags>
         <dependencies>
             <dependency id="ReflectionMagic" version="2.0.0" />
         </dependencies>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="">
+    <id>SeekU.FileIO</id>
+    <version>$version$</version>
+    <title>SeekU.FileIO</title>
+    <authors>Tyler Brinks</authors>
+    <owners>Tyler Brinks</owners>
+    <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
+    <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SeekU file-based provider for event stream and snapshot storage.</description>
+    <summary>SeekU file-based provider for event stream and snapshot storage.</summary>
+    <language>en-US</language>
+    <tags>SeekU, FileIO, CQRS, Event Sourcing</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="5.0.8" />
+      <dependency id="SeekU" version="0.0.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\Providers\SeekU.FileIO\bin\Release\SeekU.FileIO.dll" target="lib\net40\SeekU.FileIO.dll" />
+    <file src="..\Providers\SeekU.FileIO\bin\Release\SeekU.FileIO.dll" target="lib\net45\SeekU.FileIO.dll" />
+    <file src="..\Providers\SeekU.FileIO\bin\Release\SeekU.FileIO.dll" target="lib\net451\SeekU.FileIO.dll" />
+  </files>
+</package>

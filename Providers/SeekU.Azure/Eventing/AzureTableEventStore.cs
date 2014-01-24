@@ -22,7 +22,7 @@ namespace SeekU.Azure.Eventing
         /// <summary>
         /// Globally sets the name of the event streams connection string for Azure 
         /// </summary>
-        public string ConnectionString
+        public string TableConnectionString
         {
             get { return AzureStorageRepository.EventConnectionString; }
             set { AzureStorageRepository.EventConnectionString = value; }
@@ -31,7 +31,7 @@ namespace SeekU.Azure.Eventing
         /// <summary>
         /// Globally sets the name of the event stream database in Azure
         /// </summary>
-        public string DatabaseName
+        public string TableName
         {
             get { return AzureStorageRepository.EventTableName; }
             set { AzureStorageRepository.EventTableName = value; }

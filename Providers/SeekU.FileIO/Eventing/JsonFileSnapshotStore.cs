@@ -9,7 +9,7 @@ namespace SeekU.FileIO.Eventing
     /// <summary>
     /// Saves snapshots to files serialized in json format
     /// </summary>
-    public class JsonFileSnapshotStoreBase : FileSnapshotStoreBase, ISnapshotStore
+    public class JsonFileSnapshotStore : FileSnapshotStoreBase, ISnapshotStore
     {
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings
         {
@@ -17,7 +17,7 @@ namespace SeekU.FileIO.Eventing
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
         };
 
-        public JsonFileSnapshotStoreBase()
+        public JsonFileSnapshotStore()
         {
             FileName = "snapshot.json";   
         }

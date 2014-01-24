@@ -8,7 +8,7 @@ namespace SeekU.FileIO.Eventing
     /// <summary>
     /// Saves event streams to files serialized in json format
     /// </summary>
-    public class JsonFileEventStoreBase : FileEventStoreBase, IEventStore
+    public class JsonFileEventStore : FileEventStoreBase, IEventStore
     {
         /// <summary>
         /// Serializer settings to preserve namespaces

@@ -20,9 +20,9 @@ namespace TextFileSample
             var host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
 
             // Configure file-based event storeage
-            host.ForEventStore().Use<JsonFileEventStoreBase>()
+            host.ForEventStore().Use<JsonFileEventStore>()
                 // Example of using a configuration action.  In this cas it sets the snapshot store's file name
-                .ForSnapshotStore().Use<JsonFileSnapshotStoreBase>(store =>
+                .ForSnapshotStore().Use<JsonFileSnapshotStore>(store =>
                 {
                     store.FileName = "snapshot-instance.json";
                 });

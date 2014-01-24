@@ -22,12 +22,12 @@ namespace AzureStorageSample
             host
                 .ForEventStore().Use<AzureTableEventStore>(store =>
                 {
-                    store.ConnectionString = connectionString;                    
+                    store.TableConnectionString = connectionString;                    
                 })
                 .ForSnapshotStore().Use<AzureBlobSnapshotStore>(store =>
-            {
-                store.ConnectionString = connectionString;
-            });
+                {
+                    store.BlobConnectionString = connectionString;
+                });
 
             var bus = host.GetCommandBus();
 

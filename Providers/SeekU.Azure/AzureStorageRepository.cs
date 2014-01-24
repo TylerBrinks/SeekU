@@ -55,7 +55,7 @@ namespace SeekU.Azure
         /// <returns>List of events</returns>
         public List<EventStream> GetEventStream(Guid aggregateRoodId, long startVersion)
         {
-            CreateContainers();
+            CreateEventContainer();
 
             // Get all rows with the partition key == aggregate root and row key >= start version
             var query = new TableQuery<EventStream>()
@@ -76,7 +76,7 @@ namespace SeekU.Azure
         /// <param name="events">Events to insert</param>
         public void InsertEvents(EventStream events)
         {
-            CreateContainers();
+            CreateEventContainer();
 
             var table = GetTable();
             table.Execute(TableOperation.Insert(events));
@@ -89,7 +89,7 @@ namespace SeekU.Azure
         /// <returns>Snapshot details</returns>
         public SnapshotDetail GetSnapshot(Guid aggregateRootId)
         {
-            CreateContainers();
+            CreateSnapshotContainer();
 
             var blob = GetContainer().GetBlockBlobReference(aggregateRootId.ToString().ToLower());
 
@@ -109,7 +109,7 @@ namespace SeekU.Azure
         /// <param name="snapshot">Snapshot instance</param>
         public void InsertSnapshot(SnapshotDetail snapshot)
         {
-            CreateContainers();
+            CreateSnapshotContainer();
 
             var blob = GetContainer().GetBlockBlobReference(snapshot.AggregateRootId.ToString().ToLower());
 
@@ -141,23 +141,36 @@ namespace SeekU.Azure
         }
 
         /// <summary>
-        /// Creates the event stream and snapshot blob containers if they don't exist
+        /// Creates the event stream table if ot doesn't exist
         /// </summary>
-        private static void CreateContainers()
+        private static void CreateEventContainer()
         {
             lock (Sync)
             {
-                if (!_eventTableCreated)
+                if (_eventTableCreated)
                 {
-                    _eventTableCreated = true;
-                    GetTable().CreateIfNotExists();
+                    return;
                 }
 
-                if (!_snapshotContainerCreated)
+                _eventTableCreated = true;
+                GetTable().CreateIfNotExists();
+            }
+        }
+
+        /// <summary>
+        /// Creates the snapshot blob containers if it doesn't exist
+        /// </summary>
+        private static void CreateSnapshotContainer()
+        {
+            lock (Sync)
+            {
+                if (_snapshotContainerCreated)
                 {
-                    _snapshotContainerCreated = true;
-                    GetContainer().CreateIfNotExists();
+                    return;
                 }
+
+                _snapshotContainerCreated = true;
+                GetContainer().CreateIfNotExists();
             }
         }
     }

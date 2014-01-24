@@ -44,8 +44,8 @@
     <Compile Include="EventStream.cs" />
     <Compile Include="Eventing\FileEventStoreBase.cs" />
     <Compile Include="Eventing\FileSnapshotStoreBase.cs" />
-    <Compile Include="Eventing\JsonFileEventStoreBase.cs" />
-    <Compile Include="Eventing\JsonFileSnapshotStoreBase.cs" />
+    <Compile Include="Eventing\JsonFileEventStore.cs" />
+    <Compile Include="Eventing\JsonFileSnapshotStore.cs" />
     <Compile Include="FileUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnapshotDetail.cs" />
@@ -68,4 +68,17 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="SeekUAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <SeekUAssemblyVersion>%(SeekUAssemblyInfo.Version)</SeekUAssemblyVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+      <SeekUSemanticVersion>$(SeekUAssemblyVersion.SubString(0, $(SeekUAssemblyVersion.LastIndexOf('.'))))</SeekUSemanticVersion>
+    </PropertyGroup>
+    <Exec Command="$(SolutionDir).nuget\nuget pack $(SolutionDir)nuspec\SeekU.FileIO.nuspec -Version $(SeekUSemanticVersion) -o $(SolutionDir)nuspec" />
+    <Message Text="$(SolutionDir).nuget\nuget pack $(SolutionDir)nuspec\SeekU.FileIO.nuspec -Version $(SeekUSemanticVersion)" Importance="high" />
+  </Target>
 </Project>
