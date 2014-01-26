@@ -33,13 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSBServerSample", "Samples\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSBDomain", "Samples\NServiceBus Sample\NSBCommands\NSBDomain.csproj", "{073DD025-C296-44E4-B4D7-61385880E2F9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B7736CF2-C9D2-4599-964C-F72F8AAF377F}"
-	ProjectSection(SolutionItems) = preProject
-		SeekU\.nuget\NuGet.Config = SeekU\.nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeekU.FileIO", "Providers\SeekU.FileIO\SeekU.FileIO.csproj", "{FB95DDC6-7E5B-493A-BCD3-92811FB99BE2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextFileSample", "Samples\TextFileSample\TextFileSample.csproj", "{3C57433A-FED1-45B9-BC80-2F6256D54AB8}"

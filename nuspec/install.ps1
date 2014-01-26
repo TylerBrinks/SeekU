@@ -6,7 +6,7 @@ param($installPath, $toolsPath, $package, $project)
 
 try
 {
-  $url = "http://tylerbrinks.github.io/seeku/"
+  $url = "http://tylerbrinks.github.io/SeekU/"
   $packageName = "SeekU"
   $dte2 = Get-Interface $dte ([EnvDTE80.DTE2])
 

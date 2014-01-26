@@ -16,8 +16,9 @@ namespace AzureStorageSample
         {
             // Use MongoDB for event and snapshot storage
             var host = new SeekUHostConfiguration<SeekUDemoDependencyResolver>();
-            //"DefaultEndpointsProtocol=https;AccountName=[Your account name];AccountKey[Your account key]"
-            const string connectionString = "DefaultEndpointsProtocol=https;AccountName=storagesandbox;AccountKey=PGUpbQzmvwICuGm+/91VOSibmJFUBSSAvyFL6jtDMqPhhCyhPfa4hKOx71SJjsNUMrumsUu2MfFxBVJtIivu/g==";
+            // Update with your connection string
+            const string connectionString =
+                "DefaultEndpointsProtocol=https;AccountName=[Your account name];AccountKey[Your account key]";
 
             host
                 .ForEventStore().Use<AzureTableEventStore>(store =>

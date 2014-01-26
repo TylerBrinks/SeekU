@@ -6,6 +6,7 @@
     <title>SeekU.Azure</title>
     <authors>Tyler Brinks</authors>
     <owners>Tyler Brinks</owners>
+	<licenseUrl>https://github.com/TylerBrinks/SeekU/blob/master/LICENSE</licenseUrl>
     <projectUrl>http://tylerbrinks.github.io/SeekU</projectUrl>
     <iconUrl>http://tylerbrinks.github.io/SeekU/images/seeku-icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

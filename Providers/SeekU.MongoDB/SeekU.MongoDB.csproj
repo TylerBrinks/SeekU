@@ -83,7 +83,7 @@
       <SeekUSemanticVersion>$(SeekUAssemblyVersion.SubString(0, $(SeekUAssemblyVersion.LastIndexOf('.'))))</SeekUSemanticVersion>
     </PropertyGroup>
 
-    <Exec Command="$(SolutionDir).nuget\nuget pack $(SolutionDir)nuspec\SeekU.MongoDB.nuspec -Version $(SeekUSemanticVersion) -o $(SolutionDir)nuspec" />
-    <Message Text="$(SolutionDir).nuget\nuget pack $(SolutionDir)nuspec\SeekU.MongoDB.nuspec -Version $(SeekUSemanticVersion)" Importance="high" />
+    <Exec Command="$(SolutionDir)tools\nuget pack $(SolutionDir)nuspec\SeekU.MongoDB.nuspec -Version $(SeekUSemanticVersion) -o $(SolutionDir)nuspec" />
+    <Message Text="$(SolutionDir)tools\nuget pack $(SolutionDir)nuspec\SeekU.MongoDB.nuspec -Version $(SeekUSemanticVersion)" Importance="high" />
   </Target>
 </Project>

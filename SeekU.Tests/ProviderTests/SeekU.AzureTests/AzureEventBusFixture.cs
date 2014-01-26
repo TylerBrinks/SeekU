@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Moq;
 using NUnit.Framework;
 using SeekU.Azure.Commanding;
-using SeekU.Commanding;
 using SeekU.Eventing;
 
 namespace SeekU.Tests.ProviderTests.SeekU.AzureTests

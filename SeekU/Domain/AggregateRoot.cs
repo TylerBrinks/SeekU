@@ -117,7 +117,7 @@ namespace SeekU.Domain
             {
                 this.AsDynamic().Apply(domainEvent);
             }
-            catch (ApplicationException ex)
+            catch (ApplicationException)
             {
                 // The aggregate root has no internal handler for the event.  No 
                 // need to trow an error.

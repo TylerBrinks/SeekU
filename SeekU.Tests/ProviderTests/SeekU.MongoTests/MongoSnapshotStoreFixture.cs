@@ -5,7 +5,6 @@ using SampleDomain.Domain;
 using SeekU.Domain;
 using SeekU.MongoDB;
 using SeekU.MongoDB.Eventing;
-using SeekU.Tests.Properties;
 
 namespace SeekU.Tests.ProviderTests.SeekU.MongoTests
 {

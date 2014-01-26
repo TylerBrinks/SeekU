@@ -123,10 +123,10 @@ namespace SampleWebsite.DependencyResolution
                 try
                 {
                     return serviceType.IsAbstract || serviceType.IsInterface
-                        ? this.Container.TryGetInstance(serviceType)
-                        : this.Container.GetInstance(serviceType);
+                        ? Container.TryGetInstance(serviceType)
+                        : Container.GetInstance(serviceType);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }
