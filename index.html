@@ -19,7 +19,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-5">
-				<img src="images/seeku.png" alt="SeekU" />
+				<img src="images/seeku.png" alt="SeekU" style="margin-top: 10px;" />
 			</div>
 			<div class="col-md-7">
 				<h1>SeekU</h1>
@@ -27,7 +27,52 @@
 				for making CQRS + Event Sourcing enjoyable.</p>
 				
 				<div style="martin-top: 20px;">
-					<a href="https://github.com/TylerBrinks/SeekU/wiki" class="btn btn-large btn-primary">Documentation on the GitHub Wiki</a>
+					<a href="https://github.com/TylerBrinks/SeekU/wiki" class="btn btn-large btn-primary">
+					Documentation on the GitHub Wiki</a>
+					<br/>
+					<a href="https://github.com/TylerBrinks/SeekU" class="btn btn-large btn-primary">View the Source Code</a>
+				</div>
+				
+				<h3>What is CQRS?</h3>
+				<div><blockquote>CQRS is simply the creation of two objects where there was previously only one. The separation occurs based upon whether the methods are a command or a query.</blockquote></div>
+				<div style="martin-top: 20px;">
+					<p>SeekU helps solve the complexities of building a distributed, event-driven system using CQRS and Event Sourcing.</p>
+					<p>At it's most basic, SeekU is a series of in-memory providers that marshal events through your object model.</p>
+				</div>
+				
+				<h3>SeekU Providers</h3>
+				<p>Each layer of SeekU can be replaced with your own provider.  It's a trivial task to override the defaults in
+				favor of using an Azure Service Bus for event publishing and MongoDB for Snapshot storage, for example.</p>
+				
+				<h3>Command Handling</h3>
+				<p>The default command handler send commands into your domain object to change the state of your model.  By default
+				this is in-memory, however it can easily be replaced with NServiceBus, Azure Service Bus, RabbitMQ, or any other
+				means of sending messages across application layers.
+				</p>
+				
+				<h3>Event Handling</h3>
+				<p>Like command handling, the default event handler broadcasts events to subscribers.  Similarly, events
+				can be sent across boundaries via Azure Service Bus, NServiceBus, etc...</p>
+				
+				<h3>Event Stream Storage</h3>
+				<p>SeekU is extremely flexible in terms of storing a history of domain events.  Currently there are
+				providers for SQL Server, MongoDB, Azure Table Storage, and flat JSON files.  Creating your own storage
+				provider is as simple as inheriting from a base class and implementing a pair of methods.</p>
+				
+				<h3>Snapshot Storage</h3>
+				<p>SeekU uses snapshots to help keep the process of loading domain objects as fast as possible.  In
+				situations where there are thousands of events in an object's history, loading each event can be time
+				consuming.  Snapshots provide a point in time where the state of the domain is saved and only new
+				events need be applied.</p>
+				
+				<p>Currently there are snapshot
+				providers for SQL Server, MongoDB, Azure Blob Storage, and flat JSON files.  Creating your own snapshot
+				provider is as simple as inheriting from a base class and implementing a pair of methods.</p>
+				
+				<div style="margin-top: 20px">
+					<a href="https://github.com/TylerBrinks/SeekU/wiki" class="btn btn-large btn-primary">
+					Documentation on the GitHub Wiki</a>
+					<br/><a href="https://github.com/TylerBrinks/SeekU" class="btn btn-large btn-primary">View the Source Code</a>
 				</div>
 			</div>
 		</div>
