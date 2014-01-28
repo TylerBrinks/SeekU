@@ -20,23 +20,23 @@ namespace SeekU.FileIO.Eventing
         };
 
         /// <summary>
-        /// Deserializes events stored in json format to an event stream
+        /// Deserializes events stored in json format to an event eventStream
         /// </summary>
         /// <param name="text">Json serialized events</param>
-        /// <returns>Event stream</returns>
+        /// <returns>Event eventStream</returns>
         public override EventStream GetEventStream(string text)
         {
             return JsonConvert.DeserializeObject<EventStream>(text, SerializerSettings);
         }
 
         /// <summary>
-        /// Serializes an event stream to json
+        /// Serializes an event eventStream to json
         /// </summary>
-        /// <param name="stream">Stream to serialize</param>
-        /// <returns>Json serialized event stream</returns>
-        public override string GetEventStreamText(EventStream stream)
+        /// <param name="eventStream">Stream to serialize</param>
+        /// <returns>Json serialized event eventStream</returns>
+        public override string GetEventStreamText(EventStream eventStream)
         {
-            return JsonConvert.SerializeObject(stream, SerializerSettings);
+            return JsonConvert.SerializeObject(eventStream, SerializerSettings);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SeekU.FileIO.Eventing
         }
 
         /// <summary>
-        /// Saves a new file to disk containing event stream data
+        /// Saves a new file to disk containing event eventStream data
         /// </summary>
         /// <param name="aggregateRootId">Aggregate root id</param>
         /// <param name="domainEvents">List of events</param>

@@ -21,7 +21,7 @@ namespace TextFileSample
 
             // Configure file-based event storeage
             host.ForEventStore().Use<JsonFileEventStore>()
-                // Example of using a configuration action.  In this cas it sets the snapshot store's file name
+                // Example of using an optional configuration action.  In this cas it sets the snapshot store's file name
                 .ForSnapshotStore().Use<JsonFileSnapshotStore>(store =>
                 {
                     store.FileName = "snapshot-instance.json";

@@ -16,6 +16,7 @@ namespace SampleDomain.Events
     {
         [DataMember] // Necessary Azure and for json serialization
         public Guid Id { get; set; }
+
         [DataMember] // Necessary Azure and for json serialization
         public double Amount { get; set; }
     }
@@ -23,6 +24,10 @@ namespace SampleDomain.Events
     [DataContract]
     public class AccountCreatedEvent : BankAccountEvent
     {
+        public AccountCreatedEvent()
+        {
+            
+        }
         public AccountCreatedEvent(Guid id, double amount)
         {
             Id = id;
@@ -33,6 +38,10 @@ namespace SampleDomain.Events
     [DataContract]
     public class AccountDebitedEvent : BankAccountEvent
     {
+        public AccountDebitedEvent()
+        {
+            
+        }
         public AccountDebitedEvent(Guid id, double amount)
         {
             Id = id;
@@ -43,6 +52,10 @@ namespace SampleDomain.Events
     [DataContract]
     public class AccountCreditedEvent : BankAccountEvent
     {
+        public AccountCreditedEvent()
+        {
+            
+        }
         public AccountCreditedEvent(Guid id, double amount)
         {
             Id = id;
@@ -53,6 +66,10 @@ namespace SampleDomain.Events
     [DataContract]
     public class DebitCardAddedEvent : DomainEvent
     {
+        public DebitCardAddedEvent()
+        {
+            
+        }
         public DebitCardAddedEvent(Guid accountId, Guid cardId, string cardNumber)
         {
             AccountId = accountId;
@@ -62,8 +79,10 @@ namespace SampleDomain.Events
 
         [DataMember]
         public Guid AccountId { get; set; }
+        
         [DataMember]
         public Guid CardId { get; set; }
+        
         [DataMember]
         public string CardNumber { get; set; }
     }
@@ -90,6 +109,7 @@ namespace SampleDomain.Events
 
         [DataMember]
         public double Amount { get; set; }
+        
         [DataMember]
         public string Merchant { get; set; }
     }

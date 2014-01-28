@@ -11,10 +11,8 @@ namespace SeekU.FileIO.Eventing
     /// </summary>
     public abstract class FileEventStoreBase
     {
-
-
         public abstract EventStream GetEventStream(string text);
-        public abstract string GetEventStreamText(EventStream stream);
+        public abstract string GetEventStreamText(EventStream eventStream);
 
         /// <summary>
         /// Gets all events stored on disk
@@ -45,7 +43,7 @@ namespace SeekU.FileIO.Eventing
         }
 
         /// <summary>
-        /// Saves a new file to disk containing event stream data
+        /// Saves a new file to disk containing event eventStream data
         /// </summary>
         /// <param name="aggregateRootId">Aggregate root id</param>
         /// <param name="domainEvents">List of events</param>
@@ -76,7 +74,8 @@ namespace SeekU.FileIO.Eventing
             var fileName = string.Format("{0}-{1}.{2}", firstEvent.Sequence, lastEvent.Sequence, extension);
             var eventPath = Path.Combine(aggregateRootDirectory, fileName);
 
-            File.WriteAllText(eventPath, GetEventStreamText(stream));
+            var serialized = GetEventStreamText(stream);
+            File.WriteAllText(eventPath, serialized);
         }
     }
 }
