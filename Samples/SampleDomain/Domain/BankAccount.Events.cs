@@ -22,23 +22,27 @@ namespace SampleDomain.Domain
         }
 
 		// Don't remove this - it's called dynamically
-        private void Apply(AccountCreatedEvent @event)
+        // It could also be "private void Apply(AccountCreatedEvent @event)"
+        private void OnAccountCreated(AccountCreatedEvent @event)
         {
             Id = @event.Id;
             _balance = @event.Amount;
         }
 
         // Don't remove this - it's called dynamically
+        // It could also be "private void OnAccountDebited(AccountDebitedEvent @event)"
         private void Apply(AccountDebitedEvent @event)
         {
             _balance -= @event.Amount;
         }
 
+        // It could also be "private void OnAccountCredited(AccountDebitedEvent @event)"
         private void Apply(AccountCreditedEvent @event)
         {
             _balance += @event.Amount;
         }
 
+        // It could also be "private void OnDebitCardAdded(AccountDebitedEvent @event)"
         private void Apply(DebitCardAddedEvent @event)
         {
             _cards.Add(new DebitCard(this, @event.CardId, @event.CardNumber));

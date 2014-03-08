@@ -14,5 +14,10 @@ namespace SeekU.Eventing
 
         [DataMember]
         public DateTime EventDate { get; set; }
+
+        public virtual DomainEvent UpgradeVersion()
+        {
+            return null;
+        }
     }
 }

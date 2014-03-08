@@ -25,7 +25,7 @@ namespace SeekU.Commanding
         /// <typeparam name="T">Type of incoming command</typeparam>
         /// <param name="command">Command instance to broadcast</param>
         //[DebuggerStepThrough]
-        public void Send<T>(T command) where T : ICommand
+        public ICommandResult Send<T>(T command) where T : ICommand
         {
             // Create an instance of the command handler for the command type
             var commandType = typeof (IHandleCommands<>).MakeGenericType(command.GetType());
@@ -37,7 +37,7 @@ namespace SeekU.Commanding
             }
 
             // Find the handler's "Handle" method
-            var method = /*typeof(IHandleCommands<>).MakeGenericType(typeof(T))*/ commandType.GetMethod("Handle");
+            var method = commandType.GetMethod("Handle");
             
             try
             {
@@ -45,11 +45,47 @@ namespace SeekU.Commanding
 
                 // Try to invoke the method using the handler context
                 //method.Invoke(commandHandler, new object[] { commandHandlingContext, _dependencyResolver });
-                method.Invoke(commandHandler, new object[] { context, command });
+                var result = method.Invoke(commandHandler, new object[] { context, command });
+
+                return result == null 
+                    ? new EmptyCommandResult()
+                    : (ICommandResult)result;
             }
             catch (Exception ex)
             {
                 throw new Exception("Exception invoking 'Handle' method on type " + commandHandler.GetType().Name, ex.InnerException);
+            }
+        }
+
+        public ValidationResult Validate<T>(T command) where T : ICommand
+        {
+            try
+            {
+                var validationType = typeof(IValidateCommands<>).MakeGenericType(command.GetType());
+                var validationHandler = _dependencyResolver.Resolve(validationType);
+
+                if (validationHandler == null)
+                {
+                    return ValidationResult.Successful;
+                }
+
+                // Find the handler's "Handle" method
+                var method = validationType.GetMethod("Validate");
+
+                try
+                {
+                    var result = method.Invoke(validationHandler, new object[] { command });
+
+                    return (ValidationResult)result;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Exception invoking 'Validate' method on type " + validationHandler.GetType().Name, ex.InnerException);
+                }
+            }
+            catch
+            {
+                return ValidationResult.Successful;
             }
         }
     }

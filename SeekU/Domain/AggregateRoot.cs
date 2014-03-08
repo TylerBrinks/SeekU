@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using ReflectionMagic;
 using SeekU.Eventing;
 
@@ -12,7 +13,9 @@ namespace SeekU.Domain
     public abstract class AggregateRoot
     {
         private readonly List<DomainEvent> _appliedEvents = new List<DomainEvent>();
-        private readonly List<Entity> _entities = new List<Entity>(); 
+        private readonly List<Entity> _entities = new List<Entity>();
+        private static readonly Dictionary<string, MethodInfo> CachedLocalMethods = new Dictionary<string, MethodInfo>();
+        private static readonly Dictionary<string, MethodInfo> CachedEntityMethods = new Dictionary<string, MethodInfo>(); 
 
         /// <summary>
         /// Creates a new aggregate root with a new ID
@@ -113,15 +116,7 @@ namespace SeekU.Domain
         /// <param name="domainEvent">Event to apply</param>
         private void ApplyEventToSelf(DomainEvent domainEvent)
         {
-            try
-            {
-                this.AsDynamic().Apply(domainEvent);
-            }
-            catch (ApplicationException)
-            {
-                // The aggregate root has no internal handler for the event.  No 
-                // need to trow an error.
-            }
+            ApplyMethodWithCaching(this, domainEvent, CachedLocalMethods);
         }
 
         /// <summary>
@@ -132,9 +127,48 @@ namespace SeekU.Domain
         {
             var entity = _entities.FirstOrDefault(e => e.Id == entityEvent.EntityId);
 
-            if (entity != null)
+            if (entity == null)
             {
-                entity.AsDynamic().Apply(entityEvent);
+                return;
+            }
+
+            ApplyMethodWithCaching(entity, entityEvent, CachedEntityMethods);
+        }
+
+        private void ApplyMethodWithCaching(object instanceToApply, DomainEvent eventToApply, Dictionary<string, MethodInfo> cache)
+        {
+            try
+            {
+                var eventType = eventToApply.GetType();
+                var localKey = string.Format("{0},{1}", GetType().FullName, eventType);
+                MethodInfo method;
+
+                // Check of the handler (method info) for this event has been cached
+                if (cache.ContainsKey(localKey))
+                {
+                    method = cache[localKey];
+                }
+                else
+                {
+                    // Get the convention-based handler
+                    method = instanceToApply.GetAppliedEventMethodNamed(eventToApply.GetEventMethodName(), eventType);
+                    cache.Add(localKey, method);
+                }
+
+                // Call the handler if it exists; otherwise dynamically call "Apply."
+                if (method != null)
+                {
+                    method.Invoke(instanceToApply, new object[] { eventToApply });
+                }
+                else
+                {
+                    instanceToApply.AsDynamic().Apply(eventToApply);
+                }
+            }
+            catch (Exception)
+            {
+                // The entity has no internal handler for the event.  No 
+                // need to trow an error.
             }
         }
     }

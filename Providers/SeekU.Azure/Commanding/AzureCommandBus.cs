@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
@@ -37,7 +38,7 @@ namespace SeekU.Azure.Commanding
         /// </summary>
         /// <typeparam name="T">Type of command to send</typeparam>
         /// <param name="command">Command instance</param>
-        public void Send<T>(T command) where T : ICommand
+        public ICommandResult Send<T>(T command) where T : ICommand
         {
             var connection = AzureServiceBusConnectionString ?? DefaultConnectionString;
 
@@ -49,6 +50,13 @@ namespace SeekU.Azure.Commanding
             CreateQueue(connection);
 
             SendMessage(command, connection);
+
+            return new EmptyCommandResult();
+        }
+
+        public ValidationResult Validate<T>(T command) where T : ICommand
+        {
+            return ValidationResult.Successful;
         }
 
         /// <summary>

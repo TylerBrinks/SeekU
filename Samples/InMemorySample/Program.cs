@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using SampleDomain;
 using SampleDomain.Commands;
 using SampleDomain.Domain;
 using SeekU;
@@ -32,8 +28,13 @@ namespace InMemorySample
             var id = SequentialGuid.NewId();
 
             // Create the account
-            bus.Send(new CreateNewAccountCommand(id, 950));
+            var newAccountCommand = new CreateNewAccountCommand(id, 950);
+            // Simple validation example.
+            var validation = bus.Validate(newAccountCommand);
+            Console.WriteLine("CreateNewAccountCommand is valid?  {0}", validation.Success);
 
+            bus.Send(new CreateNewAccountCommand(id, 950));
+            
             // Use the account to create a history of events including a snapshot
             bus.Send(new DebitAccountCommand(id, 50));
             bus.Send(new CreditAccountCommand(id, 120));
@@ -54,6 +55,7 @@ namespace InMemorySample
                 scan.WithDefaultConventions();
                 scan.ConnectImplementationsToTypesClosing(typeof(IHandleCommands<>));
                 scan.ConnectImplementationsToTypesClosing(typeof(IHandleDomainEvents<>));
+                scan.ConnectImplementationsToTypesClosing(typeof(IValidateCommands<>));
             }));
 
             Container = ObjectFactory.Container;

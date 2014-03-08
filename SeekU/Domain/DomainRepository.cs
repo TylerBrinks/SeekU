@@ -1,4 +1,9 @@
 ﻿using System;
+using System.CodeDom;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 using ReflectionMagic;
 using SeekU.Eventing;
 
@@ -45,8 +50,10 @@ namespace SeekU.Domain
             // after a snapshot was taken.
             var events = _eventStore.GetEvents(aggregateRootId, aggregateRoot.Version + 1);
 
+            var currentEvents = UpdateEventVersions(events);
+
             // Replays all events to bring the root up to current version
-            aggregateRoot.ReplayEvents(events);
+            aggregateRoot.ReplayEvents(currentEvents);
 
             return aggregateRoot.Version == 0 
                 ? null
@@ -95,6 +102,32 @@ namespace SeekU.Domain
             var method = _snapshotStore.GetType().GetMethod("GetSnapshot").MakeGenericMethod(snapshotType);
 
             return method.Invoke(_snapshotStore, new object[] { aggregateRoodId });
+        }
+
+        /// <summary>
+        /// Upgrades outdated events to their current counterpart.
+        /// </summary>
+        /// <param name="events"></param>
+        private IEnumerable<DomainEvent> UpdateEventVersions(IEnumerable<DomainEvent> events)
+        {
+            if (events == null)
+            {
+                return null;
+            }
+
+            var currentEvents = events.ToList();
+
+            for (var i = 0; i < currentEvents.Count(); i++)
+            {
+                // Continue upgrading until the current version is found.
+                DomainEvent nextVersion;
+                while ((nextVersion = currentEvents[i].UpgradeVersion()) != null)
+                {
+                    currentEvents[i] = nextVersion;
+                }
+            }
+
+            return currentEvents;
         }
     }
 }

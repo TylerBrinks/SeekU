@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SeekU.Commanding
 {
     /// <summary>
@@ -5,6 +7,12 @@ namespace SeekU.Commanding
     /// </summary>
     public interface ICommandBus
     {
-        void Send<T>(T command) where T : ICommand;
+        ICommandResult Send<T>(T command) where T : ICommand;
+        ValidationResult Validate<T>(T command) where T : ICommand;
+    }
+
+    public interface ICommandResult
+    {
+        bool Success { get; set; }
     }
 }

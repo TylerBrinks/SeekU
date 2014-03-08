@@ -96,8 +96,8 @@ namespace SeekU.Tests.CommandingTests
         {
             var events = new List<DomainEvent>
             {
-                new SomethingHappened{Sequence = 3},
-                new SomethingHappened{Sequence = 4},
+                new SomethingHappenedEvent{Sequence = 3},
+                new SomethingHappenedEvent{Sequence = 4},
             };
 
             var eventStore = new Mock<IEventStore>();
@@ -146,6 +146,54 @@ namespace SeekU.Tests.CommandingTests
             eventStore.Verify(e => e.Insert(It.IsAny<Guid>(), It.IsAny<List<DomainEvent>>()), Times.Once);
             eventBus.Verify(e => e.PublishEvents(It.IsAny<List<DomainEvent>>()), Times.Once);
             snapshotStore.Verify(e => e.SaveSnapshot(It.IsAny<Snapshot<TestSnapshot>>()), Times.Once);
+        }
+
+        [Test]
+        public void Context_Upgrades_Event_Versions()
+        {
+            var events = new List<DomainEvent>
+            {
+                new OldEventHappened{Sequence = 1, FirstName = "First"},
+                new IntermediateEventHappened{Sequence = 2, FirstName = "First", LastName = "Last"},
+                new NewEventHappened{Sequence = 2, FirstName = "First", LastName = "Last", Age = 95},
+            };
+
+            var eventStore = new Mock<IEventStore>();
+            var snapshotStore = new Mock<ISnapshotStore>();
+            var resolver = new Mock<IDependencyResolver>();
+
+            eventStore.Setup(e => e.GetEvents(It.IsAny<Guid>(), It.IsAny<long>())).Returns(events);
+
+            eventStore.Setup(e => e.Insert(It.IsAny<Guid>(), It.IsAny<List<DomainEvent>>()));
+            snapshotStore.Setup(s => s.GetSnapshot<TestSnapshot>(It.IsAny<Guid>())).Returns(() => null);
+
+            resolver.Setup(r => r.Resolve<IEventStore>()).Returns(eventStore.Object);
+            resolver.Setup(r => r.Resolve<ISnapshotStore>()).Returns(snapshotStore.Object);
+            resolver.Setup(r => r.Resolve<DomainRepository>())
+                .Returns(new DomainRepository(snapshotStore.Object, eventStore.Object));
+
+            var context = new CommandContext(resolver.Object);
+
+            var root = context.GetById<TestDomain>(SequentialGuid.NewId());
+
+            Assert.AreEqual(3, root.Version);
+            Assert.AreEqual(0, root.AppliedEvents.Count);
+
+            var event1 = root.VersionedEvents[0];
+            var event2 = root.VersionedEvents[1];
+            var event3 = root.VersionedEvents[2];
+
+            Assert.AreEqual(event1.FirstName, "First");
+            Assert.AreEqual(event2.FirstName, "First");
+            Assert.AreEqual(event3.FirstName, "First");
+
+            Assert.AreEqual(event1.LastName, "Unknown");
+            Assert.AreEqual(event2.LastName, "Last");
+            Assert.AreEqual(event3.LastName, "Last");
+
+            Assert.AreEqual(event1.Age, -1);
+            Assert.AreEqual(event2.Age, -1);
+            Assert.AreEqual(event3.Age, 95);
         }
     }
 }

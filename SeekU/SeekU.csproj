@@ -44,11 +44,15 @@
   <ItemGroup>
     <Compile Include="Commanding\CommandContext.cs" />
     <Compile Include="Commanding\CommandHandlingContext.cs" />
+    <Compile Include="Commanding\DefaultValidationResult.cs" />
+    <Compile Include="Commanding\EmptyCommandResult.cs" />
     <Compile Include="Commanding\ICommand.cs" />
     <Compile Include="Commanding\ICommandBus.cs" />
     <Compile Include="Commanding\ICommandHandlingContext.cs" />
+    <Compile Include="Commanding\IValidateCommands.cs" />
     <Compile Include="Commanding\IHandleCommands.cs" />
     <Compile Include="Commanding\InMemoryCommandBus.cs" />
+    <Compile Include="Commanding\ValidationResult.cs" />
     <Compile Include="Domain\AggregateRoot.cs" />
     <Compile Include="Domain\AggregateRootWithSnapshot.cs" />
     <Compile Include="Domain\DomainRepository.cs" />
@@ -76,7 +80,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

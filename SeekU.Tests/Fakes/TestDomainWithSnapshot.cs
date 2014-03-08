@@ -6,7 +6,7 @@ namespace SeekU.Tests.Fakes
     {
         public int Value { get; set; }
 
-        protected void Apply(SomethingHappened evt)
+        protected void Apply(SomethingHappenedEvent evt)
         {
 
         }

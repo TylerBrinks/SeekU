@@ -25,5 +25,16 @@ namespace SeekU.Tests.DomainTests
             Assert.AreEqual(3, root.Version);
             Assert.AreEqual(3, root.AppliedEvents.Count);
         }
+
+        [Test]
+        public void AggregateRoot_Calls_Event_Handlers_By_Convention()
+        {
+            var root = new TestDomain(SequentialGuid.NewId());
+
+            root.Modify();
+
+            Assert.That(root.OnSomethingHappenedCalled);
+            Assert.That(root.ApplySomethingElseHappenedCalled);
+        }
     }
 }

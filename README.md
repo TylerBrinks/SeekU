@@ -19,12 +19,12 @@ A few of the providers included in the code base include:
 - StructureMap and Ninject IoC providers
 - SQL for storing events and snapshots in a SQL database
 - MongoDB for storing events and snapshots in an MongoDB database
-- File provider for stroing events and snapshots on disk in json format
+- File provider for storing events and snapshots on disk in JSON format
 - Azure provider for storing events in Table storage, snapshots in blob storage, and sending commands and events via an Azure Service Bus
 
 ##Getting started
 Try the Github Wiki.
 
 ##How about a sample?
-The code base 9 different samples showing how to use everything from NServiceBus to Azure to simple text files.  Clone or download the 
-project, set your start up sample project, and run.
+The code base has 9 different samples showing how to use everything from NServiceBus to Azure to simple flat text files.  
+Clone or download the project, set your start up sample project, and run.
