@@ -10,6 +10,12 @@ namespace SeekU.Commanding
             ValidationMessages = new List<string>();
         }
 
+        public ValidationResult(string errorMessage) : this()
+        {
+            Success = false;
+            ValidationMessages.Add(errorMessage);
+        }
+
         public static ValidationResult Successful
         {
             get
@@ -19,6 +25,6 @@ namespace SeekU.Commanding
         }
 
         public bool Success { get; set; }
-        public IEnumerable<string> ValidationMessages { get; private set; }
+        public IList<string> ValidationMessages { get; private set; }
     }
 }
