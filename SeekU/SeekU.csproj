@@ -45,10 +45,11 @@
     <Compile Include="Commanding\CommandContext.cs" />
     <Compile Include="Commanding\CommandHandlingContext.cs" />
     <Compile Include="Commanding\DefaultValidationResult.cs" />
-    <Compile Include="Commanding\EmptyCommandResult.cs" />
+    <Compile Include="Commanding\CommandResult.cs" />
     <Compile Include="Commanding\ICommand.cs" />
     <Compile Include="Commanding\ICommandBus.cs" />
     <Compile Include="Commanding\ICommandHandlingContext.cs" />
+    <Compile Include="Commanding\ICommandResult.cs" />
     <Compile Include="Commanding\IValidateCommands.cs" />
     <Compile Include="Commanding\IHandleCommands.cs" />
     <Compile Include="Commanding\InMemoryCommandBus.cs" />

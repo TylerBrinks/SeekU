@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
@@ -51,7 +50,7 @@ namespace SeekU.Azure.Commanding
 
             SendMessage(command, connection);
 
-            return new EmptyCommandResult();
+            return CommandResult.Successful;
         }
 
         public ValidationResult Validate<T>(T command) where T : ICommand

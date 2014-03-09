@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NServiceBus;
 using SeekU.Commanding;
 using ICommand = SeekU.Commanding.ICommand;
@@ -18,7 +17,7 @@ namespace NSBClientSample
         {
             NServiceBus.Send("NSBServerSample", command);
 
-            return new EmptyCommandResult();
+            return CommandResult.Successful;
         }
 
         public ValidationResult Validate<T>(T command) where T : ICommand

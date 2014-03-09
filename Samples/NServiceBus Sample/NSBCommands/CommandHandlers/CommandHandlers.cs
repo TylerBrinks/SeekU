@@ -16,7 +16,7 @@ namespace NSBDomain.CommandHandlers
             // This is basically a unit of work.  Persist the event stream.
             context.Finalize(account);
 
-            return new EmptyCommandResult();
+            return CommandResult.Successful;
         }
 
         public ICommandResult Handle(CommandContext context, DebitAccountCommand command)
@@ -26,7 +26,7 @@ namespace NSBDomain.CommandHandlers
 
             context.Finalize(account);
             
-            return new EmptyCommandResult();
+            return CommandResult.Successful;
         }
 
         public ICommandResult Handle(CommandContext context, CreditAccountCommand command)
@@ -36,7 +36,7 @@ namespace NSBDomain.CommandHandlers
 
             context.Finalize(account);
 
-            return new EmptyCommandResult();
+            return CommandResult.Successful;
         }
     }
 }

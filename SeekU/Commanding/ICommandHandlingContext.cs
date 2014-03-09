@@ -7,6 +7,5 @@
     public interface ICommandHandlingContext<out T> where T : ICommand
     {
         T Command { get; }
-        //void Return(int value);
     }
 }

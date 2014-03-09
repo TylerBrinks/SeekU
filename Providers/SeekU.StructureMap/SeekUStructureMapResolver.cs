@@ -8,9 +8,11 @@ namespace SeekU.StructureMap
     public class SeekUStructureMapResolver : IDependencyResolver
     {
         protected IContainer Container;
+        private readonly bool _supperssDisposal;
 
-        public SeekUStructureMapResolver() : this(ObjectFactory.Container)
+        public SeekUStructureMapResolver(bool suppressDisposal = true) : this(ObjectFactory.Container)
         {
+            _supperssDisposal = suppressDisposal;
         }
 
         public SeekUStructureMapResolver(IContainer container)
@@ -61,6 +63,11 @@ namespace SeekU.StructureMap
 
         public virtual void Dispose()
         {
+            if (_supperssDisposal)
+            {
+                return;
+            }
+
             Container.Dispose();
         }
     }

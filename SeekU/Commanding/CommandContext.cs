@@ -41,15 +41,22 @@ namespace SeekU.Commanding
         /// Persists event stream, publishes events, and creates snapshots
         /// </summary>
         /// <param name="root">Aggregate root to persist</param>
-        public void Finalize(AggregateRoot root)
+        /// <param name="broadcastOnly">Do not persist the evnet; only publish to event handlers.</param>
+        public void Finalize(AggregateRoot root, bool broadcastOnly = false)
         {
-            // Persist events to the event store
-            _eventStore.Insert(root.Id, root.AppliedEvents);
+            if (!broadcastOnly)
+            {
+                // Persist events to the event store
+                _eventStore.Insert(root.Id, root.AppliedEvents);
+            }
 
             // Publish events to interested parties
             _eventBus.PublishEvents(root.AppliedEvents);
 
-            CreateSnapshot(root);
+            if (!broadcastOnly)
+            {
+                CreateSnapshot(root);
+            }
         }
 
         /// <summary>

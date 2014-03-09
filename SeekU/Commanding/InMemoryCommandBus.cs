@@ -48,7 +48,7 @@ namespace SeekU.Commanding
                 var result = method.Invoke(commandHandler, new object[] { context, command });
 
                 return result == null 
-                    ? new EmptyCommandResult()
+                    ? CommandResult.Successful
                     : (ICommandResult)result;
             }
             catch (Exception ex)

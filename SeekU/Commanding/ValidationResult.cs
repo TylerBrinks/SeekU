@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SeekU.Commanding
 {
@@ -8,7 +7,7 @@ namespace SeekU.Commanding
         public ValidationResult()
         {
             Success = true;
-            ValidationMessages = new List<ValidationMessage>();
+            ValidationMessages = new List<string>();
         }
 
         public static ValidationResult Successful
@@ -20,12 +19,6 @@ namespace SeekU.Commanding
         }
 
         public bool Success { get; set; }
-        public IEnumerable<ValidationMessage> ValidationMessages { get; private set; }
-    }
-
-    public class ValidationMessage
-    {
-        public string ErrorMessage { get; set; }
-        public Exception Exception { get; set; }
+        public IEnumerable<string> ValidationMessages { get; private set; }
     }
 }

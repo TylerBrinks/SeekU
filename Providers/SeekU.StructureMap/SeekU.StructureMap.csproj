@@ -43,16 +43,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\SeekU\SeekU.csproj">
       <Project>{49194e11-51f4-4792-af0d-32f1aa5513b4}</Project>
       <Name>SeekU</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -64,15 +63,12 @@
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="SeekUAssemblyInfo" />
     </GetAssemblyIdentity>
-
     <PropertyGroup>
       <SeekUAssemblyVersion>%(SeekUAssemblyInfo.Version)</SeekUAssemblyVersion>
     </PropertyGroup>
-
     <PropertyGroup>
       <SeekUSemanticVersion>$(SeekUAssemblyVersion.SubString(0, $(SeekUAssemblyVersion.LastIndexOf('.'))))</SeekUSemanticVersion>
     </PropertyGroup>
-
     <Exec Command="$(SolutionDir)tools\nuget pack $(SolutionDir)nuspec\SeekU.StructureMap.nuspec -Version $(SeekUSemanticVersion) -o $(SolutionDir)nuspec" />
     <Message Text="$(SolutionDir)tools\nuget pack $(SolutionDir)nuspec\SeekU.StructureMap.nuspec -Version $(SeekUSemanticVersion)" Importance="high" />
   </Target>
