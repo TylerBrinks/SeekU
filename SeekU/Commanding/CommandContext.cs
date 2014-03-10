@@ -32,7 +32,7 @@ namespace SeekU.Commanding
         /// <typeparam name="T">Type of aggregate root to load</typeparam>
         /// <param name="id">Id of the root object</param>
         /// <returns>Aggregate root of type T with events and snapshots replayed</returns>
-        public T GetById<T>(Guid id) where T : AggregateRoot, new()
+        public virtual T GetById<T>(Guid id) where T : AggregateRoot, new()
         {
             return _repository.GetById<T>(id);
         }
@@ -42,7 +42,7 @@ namespace SeekU.Commanding
         /// </summary>
         /// <param name="root">Aggregate root to persist</param>
         /// <param name="broadcastOnly">Do not persist the evnet; only publish to event handlers.</param>
-        public void Finalize(AggregateRoot root, bool broadcastOnly = false)
+        public virtual void Finalize(AggregateRoot root, bool broadcastOnly = false)
         {
             if (!broadcastOnly)
             {
