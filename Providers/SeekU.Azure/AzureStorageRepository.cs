@@ -60,9 +60,9 @@ namespace SeekU.Azure
             // Get all rows with the partition key == aggregate root and row key >= start version
             var query = new TableQuery<EventStream>()
                 .Where(TableQuery.CombineFilters(
-                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal,aggregateRoodId.ToString()),
+                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, aggregateRoodId.ToString()),
                     TableOperators.And,
-                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual,startVersion.ToString(CultureInfo.InvariantCulture))
+                    TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, startVersion.ToString(CultureInfo.InvariantCulture))
                     ));
 
             var results = GetTable().ExecuteQuery(query);

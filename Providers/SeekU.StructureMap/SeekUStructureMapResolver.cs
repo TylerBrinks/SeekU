@@ -22,7 +22,14 @@ namespace SeekU.StructureMap
 
         public virtual T Resolve<T>()
         {
-            return Container.GetInstance<T>();
+            try
+            {
+                return Container.GetInstance<T>();
+            }
+            catch (StructureMapException)
+            {
+                return default(T);
+            }
         }
 
         public virtual IEnumerable<T> ResolveAll<T>()
@@ -39,7 +46,14 @@ namespace SeekU.StructureMap
 
         public virtual object Resolve(Type type)
         {
-            return Container.GetInstance(type);
+            try
+            {
+                return Container.GetInstance(type);
+            }
+            catch (StructureMapException)
+            {
+                return null;
+            }
         }
 
         public virtual void Register<T, TK>()
