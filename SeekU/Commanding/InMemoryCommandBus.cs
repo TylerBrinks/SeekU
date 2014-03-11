@@ -61,31 +61,41 @@ namespace SeekU.Commanding
         {
             try
             {
-                var validationType = typeof(IValidateCommands<>).MakeGenericType(command.GetType());
-                var validationHandler = _dependencyResolver.Resolve(validationType);
-
-                if (validationHandler == null)
-                {
-                    return ValidationResult.Successful;
-                }
-
-                // Find the handler's "Handle" method
-                var method = validationType.GetMethod("Validate");
-
                 try
                 {
-                    var result = method.Invoke(validationHandler, new object[] { command });
+                    var validationType = typeof (IValidateCommands<>).MakeGenericType(command.GetType());
+                    var validationHandler = _dependencyResolver.Resolve(validationType);
 
-                    return (ValidationResult)result;
+                    if (validationHandler == null)
+                    {
+                        return ValidationResult.Successful;
+                    }
+
+                    // Find the handler's "Handle" method
+                    var method = validationType.GetMethod("Validate");
+
+                    try
+                    {
+                        var result = method.Invoke(validationHandler, new object[] {command});
+
+                        return (ValidationResult) result;
+                    }
+                    catch
+                    {
+                        throw new Exception("Exception invoking 'Validate' method on type " +
+                                            validationHandler.GetType().Name);
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    throw new Exception("Exception invoking 'Validate' method on type " + validationHandler.GetType().Name, ex.InnerException);
+                    // No validation configured
+                    return ValidationResult.Successful;
                 }
             }
-            catch
+            catch (Exception)
             {
-                return ValidationResult.Successful;
+                // No validation configured
+                return ValidationResult.Successful;                
             }
         }
     }
