@@ -8,6 +8,7 @@ using SeekU.Eventing;
 using SeekU.Sql.Eventing;
 using SeekU.StructureMap;
 using StructureMap;
+using StructureMap.Graph;
 
 namespace SqlSample
 {

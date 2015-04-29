@@ -8,6 +8,7 @@ using SeekU.Eventing;
 using SeekU.FileIO.Eventing;
 using SeekU.StructureMap;
 using StructureMap;
+using StructureMap.Graph;
 
 namespace TextFileSample
 {

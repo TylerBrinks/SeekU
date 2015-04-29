@@ -120,16 +120,9 @@ namespace SampleWebsite.DependencyResolution
         {
             if (string.IsNullOrEmpty(key))
             {
-                try
-                {
-                    return serviceType.IsAbstract || serviceType.IsInterface
-                        ? Container.TryGetInstance(serviceType)
-                        : Container.GetInstance(serviceType);
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
+                return serviceType.IsAbstract || serviceType.IsInterface
+                           ? this.Container.TryGetInstance(serviceType)
+                           : this.Container.GetInstance(serviceType);
             }
 
             return this.Container.GetInstance(serviceType, key);

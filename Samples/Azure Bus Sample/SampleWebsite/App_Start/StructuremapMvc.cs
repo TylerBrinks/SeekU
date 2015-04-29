@@ -22,12 +22,9 @@ using SampleWebsite.DependencyResolution;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(SampleWebsite.App_Start.StructuremapMvc), "Start")]
 
-namespace SampleWebsite.App_Start 
-{
-    public static class StructuremapMvc 
-    {
-        public static void Start() 
-        {
+namespace SampleWebsite.App_Start {
+    public static class StructuremapMvc {
+        public static void Start() {
 			IContainer container = IoC.Initialize();
             DependencyResolver.SetResolver(new StructureMapDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new StructureMapDependencyResolver(container);

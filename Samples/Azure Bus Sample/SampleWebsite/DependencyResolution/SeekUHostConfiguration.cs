@@ -3,6 +3,8 @@ using SampleDomain.Domain;
 using SeekU.Commanding;
 using SeekU.Eventing;
 using SeekU.StructureMap;
+using StructureMap.Graph;
+using StructureMap.Web.Pipeline;
 
 namespace SampleWebsite.DependencyResolution
 {
@@ -24,7 +26,7 @@ namespace SampleWebsite.DependencyResolution
         {
             Container.Configure(x => x
                 .For<T>()
-                .HttpContextScoped()
+                .LifecycleIs<HttpContextLifecycle>()
                 .Use<TK>());
         }
 
@@ -32,16 +34,16 @@ namespace SampleWebsite.DependencyResolution
         {
             Container.Configure(x => x
                 .For<T>()
-                .HttpContextScoped()
+                .LifecycleIs<HttpContextLifecycle>()
                 .Use<TK>()
-                .OnCreation(configurationAction));
+                .OnCreation(typeof(TK).FullName, configurationAction));
         }
 
         public override void Register<T>(T instance)
         {
             Container.Configure(x => x
                 .For<T>()
-                .HttpContextScoped()
+                .LifecycleIs<HttpContextLifecycle>()
                 .Use(instance));
         }
     }

@@ -16,16 +16,11 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-using SeekU;
-using SeekU.Azure.Commanding;
 using StructureMap;
-
-namespace SampleWebsite.DependencyResolution
-{
-    public static class IoC 
-    {
-        public static IContainer Initialize()
-        {
+using StructureMap.Graph;
+namespace SampleWebsite.DependencyResolution {
+    public static class IoC {
+        public static IContainer Initialize() {
             ObjectFactory.Initialize(x =>
                         {
                             x.Scan(scan =>
@@ -33,15 +28,8 @@ namespace SampleWebsite.DependencyResolution
                                         scan.TheCallingAssembly();
                                         scan.WithDefaultConventions();
                                     });
+            //                x.For<IExample>().Use<Example>();
                         });
-
-            var host = new SeekUHostConfiguration<SeekUResolver>();
-            // Comment this out to publish events instead of commands
-            host.ForCommandBus().Use<AzureCommandBus>();
-
-            // Uncomment this to publish events instead of commands
-            //host.ForEventBus().Use<AzureEventBus>();
-
             return ObjectFactory.Container;
         }
     }

@@ -7,6 +7,7 @@ using NSBDomain.Events;
 using SeekU.Commanding;
 using SeekU.Eventing;
 using SeekU.StructureMap;
+using StructureMap.Graph;
 
 namespace NSBCommands
 {

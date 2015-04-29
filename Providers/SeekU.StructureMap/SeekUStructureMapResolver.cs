@@ -67,10 +67,10 @@ namespace SeekU.StructureMap
             where T : class
             where TK : T
         {
-            Container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
+            Container.Configure(x => x.For<T>().Use<TK>().OnCreation(typeof(TK).FullName, configurationAction));
         }
 
-        public virtual void Register<T>(T instance)
+        public virtual void Register<T>(T instance) where T : class
         {
             Container.Configure(x => x.For<T>().Use(instance));
         }

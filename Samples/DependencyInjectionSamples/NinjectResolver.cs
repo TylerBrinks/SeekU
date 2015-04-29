@@ -59,7 +59,7 @@ namespace DependencyInjectionSamples
             _kernel.Bind<T>().To<TK>().OnActivation(configurationAction);
         }
 
-        public void Register<T>(T instance)
+        public void Register<T>(T instance) where T : class
         {
             _kernel.Unbind<T>();
             _kernel.Bind<T>().ToConstant(instance);

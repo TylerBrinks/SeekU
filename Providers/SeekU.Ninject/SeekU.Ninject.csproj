@@ -37,8 +37,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject">
-      <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,7 +64,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -75,15 +75,12 @@
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="SeekUAssemblyInfo" />
     </GetAssemblyIdentity>
-
     <PropertyGroup>
       <SeekUAssemblyVersion>%(SeekUAssemblyInfo.Version)</SeekUAssemblyVersion>
     </PropertyGroup>
-
     <PropertyGroup>
       <SeekUSemanticVersion>$(SeekUAssemblyVersion.SubString(0, $(SeekUAssemblyVersion.LastIndexOf('.'))))</SeekUSemanticVersion>
     </PropertyGroup>
-
     <Exec Command="$(SolutionDir)tools\nuget pack $(SolutionDir)nuspec\SeekU.Ninject.nuspec -Version $(SeekUSemanticVersion) -o $(SolutionDir)nuspec" />
     <Message Text="$(SolutionDir)tools\nuget pack $(SolutionDir)nuspec\SeekU.Ninject.nuspec -Version $(SeekUSemanticVersion)" Importance="high" />
   </Target>

@@ -53,7 +53,7 @@ namespace SeekU.Ninject
             Kernel.Bind<T>().To<TK>().OnActivation(configurationAction);
         }
 
-        public virtual void Register<T>(T instance)
+        public virtual void Register<T>(T instance) where T : class
         {
             Kernel.Unbind<T>();
             Kernel.Bind<T>().ToConstant(instance);

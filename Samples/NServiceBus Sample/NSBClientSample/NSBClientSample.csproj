@@ -44,6 +44,13 @@
     <Reference Include="NServiceBus.Host">
       <HintPath>..\..\..\packages\NServiceBus.Host.4.3.2\lib\net40\NServiceBus.Host.exe</HintPath>
     </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\..\packages\structuremap.3.1.5.154\lib\net40\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap.Net4">
+      <HintPath>..\..\..\packages\structuremap.3.1.5.154\lib\net40\StructureMap.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -82,5 +89,4 @@
     <StartAction>Program</StartAction>
     <StartProgram>$(ProjectDir)$(OutputPath)NServiceBus.Host.exe</StartProgram>
   </PropertyGroup>
-  
 </Project>

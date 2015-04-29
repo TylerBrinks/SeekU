@@ -6,6 +6,7 @@ using SeekU;
 using SeekU.Commanding;
 using SeekU.Eventing;
 using StructureMap;
+using StructureMap.Graph;
 
 namespace DependencyInjectionSamples
 {
@@ -60,10 +61,10 @@ namespace DependencyInjectionSamples
             where T : class
             where TK : T
         {
-            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(configurationAction));
+            _container.Configure(x => x.For<T>().Use<TK>().OnCreation(typeof(TK).FullName, configurationAction));
         }
 
-        public void Register<T>(T instance)
+        public void Register<T>(T instance) where T : class
         {
             _container.Configure(x => x.For<T>().Use(instance));
         }

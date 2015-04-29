@@ -6,6 +6,7 @@ using SeekU.Commanding;
 using SeekU.Eventing;
 using SeekU.StructureMap;
 using StructureMap;
+using StructureMap.Graph;
 
 namespace InMemorySample
 {

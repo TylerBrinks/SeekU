@@ -7,6 +7,7 @@ using SeekU.Eventing;
 using SeekU.MongoDB.Eventing;
 using SeekU.StructureMap;
 using StructureMap;
+using StructureMap.Graph;
 
 namespace MongoDBSample
 {

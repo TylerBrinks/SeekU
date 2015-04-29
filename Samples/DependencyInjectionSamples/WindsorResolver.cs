@@ -69,7 +69,7 @@ namespace DependencyInjectionSamples
                 .OnCreate((kernel, instance) => configurationAction((TK)instance)));
         }
 
-        public void Register<T>(T instance)
+        public void Register<T>(T instance) where T : class
         {
             _container.Register(Component.For(typeof (T)).Instance(instance).LifestyleTransient());
         }

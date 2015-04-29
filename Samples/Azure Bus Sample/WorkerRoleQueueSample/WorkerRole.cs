@@ -6,6 +6,7 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Xml;
+using Microsoft.Azure;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
@@ -17,6 +18,7 @@ using SeekU.Commanding;
 using SeekU.Eventing;
 using SeekU.StructureMap;
 using StructureMap;
+using StructureMap.Graph;
 
 namespace WorkerRoleQueueSample
 {
